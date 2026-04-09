@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aitchison TierList | Pakistan</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0b0b0f;
+            --bg-sidebar: #121218;
+            --bg-card: #1c1c24;
+            --bg-card-hover: #252530;
+            --text-main: #ffffff;
+            --text-muted: #808090;
+            --primary: #5c5cff;
+            --accent: #00f2ff;
+            /* Tiers */
+            --tier-ht1: #55FF55; --tier-ht2: #55FFFF; --tier-ht3: #FFFFFF;
+            --tier-ht4: #FF55FF; --tier-ht5: #FFAA00; --tier-lt3: #555555;
+            --tier-lt4: #AA5500;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg-dark); color: var(--text-main); display: flex; min-height: 100vh; overflow-x: hidden; }
+
+        /* Sidebar Navigation */
+        nav { width: 240px; background: var(--bg-sidebar); border-right: 1px solid #222; padding: 2rem 1rem; display: flex; flex-direction: column; gap: 2rem; }
+        .nav-logo { font-family: 'Press Start 2P', cursive; font-size: 0.7rem; color: var(--primary); text-align: center; line-height: 1.5; cursor: pointer; }
+        .nav-links { list-style: none; }
+        .nav-links li { padding: 12px 15px; border-radius: 8px; cursor: pointer; color: var(--text-muted); font-weight: 600; margin-bottom: 5px; transition: 0.2s; display: flex; align-items: center; gap: 10px; }
+        .nav-links li:hover { background: #1e1e2a; color: white; transform: translateX(5px); }
+        .nav-links li.active { background: #1e1e2a; color: white; border-left: 4px solid var(--primary); }
+
+        /* Main Content */
+        main { flex-grow: 1; padding: 2rem; max-width: 1000px; margin: 0 auto; width: 100%; }
+
+        .top-row { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 2rem; gap: 1rem; }
+        .header-info h1 { font-family: 'Press Start 2P', cursive; font-size: 1.4rem; margin-bottom: 10px; }
+        .warning-tag { background: rgba(255,170,0,0.1); color: #FFAA00; padding: 6px 12px; border-radius: 50px; font-size: 0.7rem; font-weight: 700; border: 1px solid rgba(255,170,0,0.2); }
+
+        .action-btns { display: flex; gap: 10px; }
+        .btn { padding: 10px 20px; border-radius: 8px; font-weight: 700; font-size: 0.85rem; transition: 0.2s; border: none; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; }
+        .btn:active { transform: scale(0.95); }
+        .btn-reg { background: var(--primary); color: white; box-shadow: 0 4px 15px rgba(92, 92, 255, 0.3); }
+        .btn-discord { background: #5865F2; color: white; }
+
+        /* Stats Bar */
+        .stats-overview { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 2rem; }
+        .stat-card { background: var(--bg-card); padding: 1.5rem; border-radius: 12px; border: 1px solid #222; text-align: center; }
+        .stat-card h3 { color: var(--text-muted); font-size: 0.7rem; text-transform: uppercase; margin-bottom: 5px; }
+        .stat-card p { font-size: 1.5rem; font-weight: 800; color: var(--accent); }
+
+        /* Filter Tabs */
+        .filters { display: flex; gap: 10px; margin-bottom: 1.5rem; background: #16161e; padding: 6px; border-radius: 10px; width: fit-content; }
+        .filter-btn { background: transparent; border: none; color: var(--text-muted); padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.8rem; }
+        .filter-btn.active { background: var(--bg-card); color: white; }
+
+        /* Player List */
+        .leaderboard { display: flex; flex-direction: column; gap: 0.8rem; }
+        .player-card { background: var(--bg-card); border-radius: 12px; padding: 1rem 1.5rem; display: flex; align-items: center; transition: 0.2s; border: 1px solid transparent; cursor: pointer; }
+        .player-card:hover { transform: translateX(10px); background: var(--bg-card-hover); border-color: var(--primary); }
+        .rank-num { font-family: 'Press Start 2P', cursive; width: 40px; color: var(--text-muted); font-size: 0.8rem; }
+        .avatar { width: 45px; height: 45px; border-radius: 8px; margin: 0 15px; background: #000; image-rendering: pixelated; }
+        .p-name { font-weight: 800; font-size: 1.1rem; flex-grow: 1; }
+
+        /* MC Icons */
+        .mc-icon { width: 24px; height: 24px; image-rendering: pixelated; }
+
+        /* Badges */
+        .badge-list { display: flex; gap: 8px; }
+        .badge { background: rgba(0,0,0,0.5); padding: 6px 12px; border-radius: 8px; display: flex; align-items: center; gap: 8px; border: 1px solid rgba(255,255,255,0.05); }
+        .b-text { font-family: 'Press Start 2P', cursive; font-size: 0.5rem; }
+
+        /* Colors */
+        .ht1 { color: var(--tier-ht1); } .ht2 { color: var(--tier-ht2); } .ht3 { color: var(--tier-ht3); }
+        .ht4 { color: var(--tier-ht4); } .ht5 { color: var(--tier-ht5); } .lt3 { color: var(--tier-lt3); } .lt4 { color: var(--tier-lt4); }
+
+        /* Modal Updates */
+        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); display: none; align-items: center; justify-content: center; backdrop-filter: blur(8px); z-index: 1000; }
+        .modal-box { background: var(--bg-card); padding: 40px; border-radius: 20px; width: 420px; text-align: center; border: 1px solid #333; }
+        .modal-row { display: flex; align-items: center; justify-content: space-between; background: #121218; padding: 12px 20px; border-radius: 10px; margin-bottom: 8px; width: 100%; border: 1px solid #222; }
+        .modal-row .mode-label { display: flex; align-items: center; gap: 10px; font-weight: 700; text-transform: capitalize; }
+
+        #toast { visibility: hidden; min-width: 250px; background-color: var(--primary); color: #fff; text-align: center; border-radius: 8px; padding: 16px; position: fixed; z-index: 2000; left: 50%; bottom: 30px; transform: translateX(-50%); font-weight: 600; }
+        #toast.show { visibility: visible; animation: fadein 0.5s, fadeout 0.5s 2.5s; }
+
+        @keyframes fadein { from {bottom: 0; opacity: 0;} to {bottom: 30px; opacity: 1;} }
+        @keyframes fadeout { from {bottom: 30px; opacity: 1;} to {bottom: 0; opacity: 0;} }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="nav-logo" onclick="window.location.reload()">AITCHISON<br>TIERLIST</div>
+        <ul class="nav-links">
+            <li class="active">🏆 Rankings</li>
+            <li onclick="showToast('Duels Locked')">⚔️ Duels</li>
+            <li onclick="showToast('Rules Update Soon')">📜 Rules</li>
+            <li onclick="showToast('Opening Members...')">👥 Members</li>
+        </ul>
+        <div style="margin-top: auto;">
+            <button class="btn btn-discord" style="width: 100%;" onclick="window.open('https://discord.com', '_blank')">Discord</button>
+        </div>
+    </nav>
+
+    <main>
+        <div class="top-row">
+            <div class="header-info">
+                <span class="warning-tag">⚠️ NUMBERING UPDATES ON REGISTER</span>
+                <h1 style="margin-top: 15px;">Global Rankings</h1>
+            </div>
+            <div class="action-btns">
+                <button class="btn btn-reg" onclick="showToast('Form Loading...')">Register</button>
+            </div>
+        </div>
+
+        <div class="stats-overview">
+            <div class="stat-card"><h3>Players</h3><p id="stat-players">0</p></div>
+            <div class="stat-card"><h3>Region</h3><p>Pakistan</p></div>
+            <div class="stat-card"><h3>Top Tier</h3><p>HT1</p></div>
+        </div>
+
+        <div class="filters" id="mode-filters">
+            <button class="filter-btn active" onclick="filter('all', event)">All Modes</button>
+            <button class="filter-btn" onclick="filter('sword', event)">Sword</button>
+            <button class="filter-btn" onclick="filter('nethpot', event)">Nethpot</button>
+            <button class="filter-btn" onclick="filter('axe', event)">Axe</button>
+        </div>
+
+        <div class="leaderboard" id="leaderboard"></div>
+    </main>
+
+    <div class="modal" id="modal" onclick="this.style.display='none'">
+        <div class="modal-box" onclick="event.stopPropagation()">
+            <img id="m-img" src="" class="avatar" style="width: 90px; height: 90px; margin-bottom: 15px;">
+            <h2 id="m-name" style="font-family: 'Press Start 2P', cursive; font-size: 1.1rem; margin-bottom: 25px;"></h2>
+            <div id="m-rows"></div>
+        </div>
+    </div>
+
+    <div id="toast">Message</div>
+
+    <script>
+        // Minecraft Item Image URLs
+        const mcItems = {
+            sword: "https://minecraft.wiki/images/Netherite_Sword_JE2_BE2.png",
+            axe: "https://minecraft.wiki/images/Netherite_Axe_JE2_BE2.png",
+            potion: "https://minecraft.wiki/images/Potions_Render.png",
+            nethpot: "https://minecraft.wiki/images/Netherite_Chestplate_JE2_BE2.png",
+            crystal: "https://minecraft.wiki/images/End_Crystal_JE2_BE2.png",
+            mace: "https://minecraft.wiki/images/Mace_JE1_BE1.png"
+        };
+        
+        const players = [
+            {
+                name: "x0_Encrypted",
+                tiers: [
+                    {m: "sword", r: "LT3"}, {m: "axe", r: "LT3"}, 
+                    {m: "potion", r: "LT3"}, {m: "nethpot", r: "HT4"}, {m: "crystal", r: "HT4"}
+                ]
+            },
+            {
+                name: "x0__StableDFNN",
+                tiers: [
+                    {m: "sword", r: "LT4"}, {m: "axe", r: "LT4"}, 
+                    {m: "mace", r: "HT5"}, {m: "potion", r: "HT5"}
+                ]
+            }
+        ];
+
+        function showToast(msg) {
+            const t = document.getElementById("toast");
+            t.innerText = msg; t.className = "show";
+            setTimeout(() => { t.className = t.className.replace("show", ""); }, 3000);
+        }
+
+        function createBadge(t) {
+            return `
+                <div class="badge">
+                    <img src="${mcItems[t.m] || ''}" class="mc-icon">
+                    <span class="b-text ${t.r.toLowerCase()}">${t.r}</span>
+                </div>`;
+        }
+
+        function render(filterMode = 'all') {
+            const list = document.getElementById('leaderboard');
+            list.innerHTML = '';
+            let filtered = filterMode === 'all' ? players : players.filter(p => p.tiers.some(t => t.m === filterMode));
+
+            filtered.forEach((p, i) => {
+                const card = document.createElement('div');
+                card.className = 'player-card';
+                card.onclick = () => {
+                    document.getElementById('m-name').innerText = p.name;
+                    document.getElementById('m-img').src = `https://minotar.net/helm/${p.name}/100.png`;
+                    document.getElementById('m-rows').innerHTML = p.tiers.map(t => `
+                        <div class="modal-row">
+                            <div class="mode-label">
+                                <img src="${mcItems[t.m]}" class="mc-icon">
+                                <span>${t.m}</span>
+                            </div>
+                            <span class="b-text ${t.r.toLowerCase()}" style="font-size: 0.7rem;">${t.r}</span>
+                        </div>
+                    `).join('');
+                    document.getElementById('modal').style.display = 'flex';
+                };
+                card.innerHTML = `
+                    <div class="rank-num">#${i + 1}</div>
+                    <img src="https://minotar.net/helm/${p.name}/100.png" class="avatar">
+                    <div class="p-name">${p.name}</div>
+                    <div class="badge-list">${p.tiers.map(createBadge).join('')}</div>
+                `;
+                list.appendChild(card);
+            });
+            document.getElementById('stat-players').innerText = players.length;
+        }
+
+        function filter(m, e) {
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            e.target.classList.add('active');
+            render(m);
+        }
+
+        render();
+    </script>
+</body>
+</html>
