@@ -33,6 +33,8 @@
             text-transform: uppercase;
             margin-right: 8px;
             border: 1px solid rgba(255,255,255,0.1);
+            display: inline-block;
+            vertical-align: middle;
         }
         .tag-iron { background: #9da1a4; color: #111; }
         .tag-stone { background: #5a5a5a; color: #fff; }
@@ -170,7 +172,8 @@
     <div class="modal" id="modal" onclick="this.style.display='none'">
         <div class="modal-box" onclick="event.stopPropagation()">
             <img id="m-img" src="" class="avatar" style="width: 80px; height: 80px; margin: 0 auto 15px auto; display: block;">
-            <h2 id="m-name" style="font-family: 'Press Start 2P', cursive; font-size: 1rem; margin-bottom: 25px;"></h2>
+            <div id="m-name-area" style="margin-bottom: 25px;">
+                </div>
             <div id="m-rows"></div>
         </div>
     </div>
@@ -201,6 +204,14 @@
                 tiers: [
                     {m: "sword", r: "LT4"}, {m: "axe", r: "LT4"}, 
                     {m: "potion", r: "HT5"}
+                ]
+            },
+            {
+                name: "BladeOP_",
+                rankTitle: "Wood",
+                tiers: [
+                    {m: "sword", r: "HT5"}, {m: "axe", r: "HT5"}, 
+                    {m: "crystal", r: "LT4"}
                 ]
             },
             {
@@ -241,8 +252,14 @@
                     ? p.tiers 
                     : p.tiers.filter(t => t.m === filterMode);
 
+                const tagClass = `tag-${p.rankTitle.toLowerCase()}`;
+
                 card.onclick = () => {
-                    document.getElementById('m-name').innerText = p.name;
+                    const nameArea = document.getElementById('m-name-area');
+                    nameArea.innerHTML = `
+                        <span class="name-tag ${tagClass}">${p.rankTitle}</span>
+                        <h2 style="font-family: 'Press Start 2P', cursive; font-size: 0.9rem; display: inline-block;">${p.name}</h2>
+                    `;
                     document.getElementById('m-img').src = `https://minotar.net/helm/${p.name}/100.png`;
                     document.getElementById('m-rows').innerHTML = p.tiers.map(t => `
                         <div class="modal-row">
@@ -255,9 +272,6 @@
                     `).join('');
                     document.getElementById('modal').style.display = 'flex';
                 };
-
-                // Added rank tag logic here
-                const tagClass = `tag-${p.rankTitle.toLowerCase()}`;
 
                 card.innerHTML = `
                     <div class="rank-num">#${i + 1}</div>
