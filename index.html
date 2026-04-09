@@ -81,11 +81,11 @@
 
         /* Points UI */
         .score-val {
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             color: var(--accent);
-            font-weight: 800;
-            margin-left: 8px;
-            letter-spacing: 0.5px;
+            font-weight: 700;
+            margin-left: 10px;
+            opacity: 0.9;
         }
 
         /* --- PC SIDEBAR --- */
@@ -124,7 +124,7 @@
         .leaderboard { display: flex; flex-direction: column; gap: 0.8rem; transition: opacity 0.3s ease; }
         .player-card { background: var(--bg-card); border-radius: 12px; padding: 1rem 1.5rem; display: flex; align-items: center; transition: 0.2s; border: 1px solid transparent; cursor: pointer; }
         .player-card:hover { transform: translateX(10px); background: var(--bg-card-hover); border-color: var(--primary); }
-        .rank-num { font-family: 'Press Start 2P', cursive; width: 70px; color: var(--text-muted); font-size: 0.7rem; flex-shrink: 0; }
+        .rank-num { font-family: 'Press Start 2P', cursive; width: 40px; color: var(--text-muted); font-size: 0.8rem; flex-shrink: 0; }
         .avatar { width: 45px; height: 45px; border-radius: 8px; margin: 0 15px; background: #000; image-rendering: pixelated; flex-shrink: 0; }
         .p-name-container { display: flex; align-items: center; flex-grow: 1; overflow: hidden; }
         .p-name { font-weight: 800; font-size: 1.1rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
@@ -172,7 +172,7 @@
             .player-card { padding: 0.8rem; gap: 5px; }
             .avatar { margin: 0 10px; width: 35px; height: 35px; }
             .p-name { font-size: 0.95rem; }
-            .rank-num { width: 50px; font-size: 0.6rem; }
+            .rank-num { width: 30px; font-size: 0.7rem; }
             .badge-list { display: none; }
             .player-card::after { content: '➔'; color: var(--text-muted); font-size: 0.8rem; margin-left: auto; }
             .filters { width: 100%; display: flex; justify-content: flex-start; overflow-x: scroll; -webkit-overflow-scrolling: touch; }
@@ -289,7 +289,8 @@
             "HT3": 15, "LT2": 20, "HT2": 25, "LT1": 30, "HT1": 35
         };
 
-        const pattern = ["sword", "axe", "potion", "nethpot", "crystal"];
+        // Strict Sequence Pattern
+        const modeOrder = ["sword", "axe", "potion", "nethpot", "crystal"];
         
         const players = [
             {
@@ -326,20 +327,12 @@
             }
         ];
 
-        function getSuffix(i) {
-            const j = i % 10, k = i % 100;
-            if (j == 1 && k != 11) return "ST";
-            if (j == 2 && k != 12) return "ND";
-            if (j == 3 && k != 13) return "RD";
-            return "TH";
+        function calculateScore(playerTiers) {
+            return playerTiers.reduce((sum, t) => sum + (pointsMap[t.r] || 0), 0);
         }
 
-        function calc(p) {
-            return p.tiers.reduce((sum, t) => sum + (pointsMap[t.r] || 0), 0);
-        }
-
-        function sortTiers(tiers) {
-            return [...tiers].sort((a, b) => pattern.indexOf(a.m) - pattern.indexOf(b.m));
+        function sortTiersByPattern(playerTiers) {
+            return [...playerTiers].sort((a, b) => modeOrder.indexOf(a.m) - modeOrder.indexOf(b.m));
         }
 
         function showMemberStats() {
@@ -396,4 +389,6 @@
 
         function createBadge(t) {
             return `
-                <div class="badge"
+                <div class="badge">
+                    <img src="${mcItems[t.m] || ''}" class="mc-icon" onerror="this.style.display='none'">
+                    <span class="b-text ${t.r.toLowerCase()}">${t.r}</
