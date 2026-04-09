@@ -18,11 +18,25 @@
             /* Tiers */
             --tier-ht1: #55FF55; --tier-ht2: #55FFFF; --tier-ht3: #FFFFFF;
             --tier-ht4: #FF55FF; --tier-ht5: #FFAA00; --tier-lt3: #555555;
-            --tier-lt4: #AA5500;
+            --tier-lt4: #AA5500; --tier-lt5: #774400;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: 'Inter', sans-serif; background: var(--bg-dark); color: var(--text-main); display: flex; min-height: 100vh; overflow-x: hidden; }
+
+        /* Titles System */
+        .name-tag {
+            font-size: 0.6rem;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 800;
+            text-transform: uppercase;
+            margin-right: 8px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .tag-iron { background: #9da1a4; color: #111; }
+        .tag-stone { background: #5a5a5a; color: #fff; }
+        .tag-wood { background: #73533a; color: #fff; }
 
         /* --- PC SIDEBAR --- */
         nav { width: 240px; background: var(--bg-sidebar); border-right: 1px solid #222; padding: 2rem 1rem; display: flex; flex-direction: column; gap: 2rem; flex-shrink: 0; }
@@ -62,7 +76,8 @@
         .player-card:hover { transform: translateX(10px); background: var(--bg-card-hover); border-color: var(--primary); }
         .rank-num { font-family: 'Press Start 2P', cursive; width: 40px; color: var(--text-muted); font-size: 0.8rem; flex-shrink: 0; }
         .avatar { width: 45px; height: 45px; border-radius: 8px; margin: 0 15px; background: #000; image-rendering: pixelated; flex-shrink: 0; }
-        .p-name { font-weight: 800; font-size: 1.1rem; flex-grow: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .p-name-container { display: flex; align-items: center; flex-grow: 1; overflow: hidden; }
+        .p-name { font-weight: 800; font-size: 1.1rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
         /* MC Icons */
         .mc-icon { width: 24px; height: 24px; image-rendering: pixelated; object-fit: contain; }
@@ -74,7 +89,7 @@
 
         /* Colors */
         .ht1 { color: var(--tier-ht1); } .ht2 { color: var(--tier-ht2); } .ht3 { color: var(--tier-ht3); }
-        .ht4 { color: var(--tier-ht4); } .ht5 { color: var(--tier-ht5); } .lt3 { color: var(--tier-lt3); } .lt4 { color: var(--tier-lt4); }
+        .ht4 { color: var(--tier-ht4); } .ht5 { color: var(--tier-ht5); } .lt3 { color: var(--tier-lt3); } .lt4 { color: var(--tier-lt4); } .lt5 { color: var(--tier-lt5); }
 
         /* Modal */
         .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); display: none; align-items: center; justify-content: center; backdrop-filter: blur(8px); z-index: 1000; padding: 20px; }
@@ -174,6 +189,7 @@
         const players = [
             {
                 name: "x0_Encrypted",
+                rankTitle: "Iron",
                 tiers: [
                     {m: "sword", r: "LT3"}, {m: "axe", r: "LT3"}, 
                     {m: "potion", r: "LT3"}, {m: "nethpot", r: "HT4"}, {m: "crystal", r: "HT4"}
@@ -181,9 +197,18 @@
             },
             {
                 name: "x0__StableDFNN",
+                rankTitle: "Stone",
                 tiers: [
                     {m: "sword", r: "LT4"}, {m: "axe", r: "LT4"}, 
                     {m: "potion", r: "HT5"}
+                ]
+            },
+            {
+                name: "LondonBrandon",
+                rankTitle: "Wood",
+                tiers: [
+                    {m: "sword", r: "LT5"}, {m: "crystal", r: "LT5"}, 
+                    {m: "nethpot", r: "LT5"}, {m: "potion", r: "LT5"}
                 ]
             }
         ];
@@ -206,14 +231,12 @@
             const list = document.getElementById('leaderboard');
             list.innerHTML = '';
             
-            // Filter players who have the selected mode
             let filtered = filterMode === 'all' ? players : players.filter(p => p.tiers.some(t => t.m === filterMode));
 
             filtered.forEach((p, i) => {
                 const card = document.createElement('div');
                 card.className = 'player-card';
                 
-                // Logic: Only show specific badge if a filter is active, otherwise show all
                 const visibleTiers = filterMode === 'all' 
                     ? p.tiers 
                     : p.tiers.filter(t => t.m === filterMode);
@@ -221,7 +244,6 @@
                 card.onclick = () => {
                     document.getElementById('m-name').innerText = p.name;
                     document.getElementById('m-img').src = `https://minotar.net/helm/${p.name}/100.png`;
-                    // Modal ALWAYS shows all tiers as requested
                     document.getElementById('m-rows').innerHTML = p.tiers.map(t => `
                         <div class="modal-row">
                             <div class="mode-label">
@@ -234,10 +256,16 @@
                     document.getElementById('modal').style.display = 'flex';
                 };
 
+                // Added rank tag logic here
+                const tagClass = `tag-${p.rankTitle.toLowerCase()}`;
+
                 card.innerHTML = `
                     <div class="rank-num">#${i + 1}</div>
                     <img src="https://minotar.net/helm/${p.name}/100.png" class="avatar">
-                    <div class="p-name">${p.name}</div>
+                    <div class="p-name-container">
+                        <span class="name-tag ${tagClass}">${p.rankTitle}</span>
+                        <div class="p-name">${p.name}</div>
+                    </div>
                     <div class="badge-list">${visibleTiers.map(createBadge).join('')}</div>
                 `;
                 list.appendChild(card);
