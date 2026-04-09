@@ -34,7 +34,7 @@
             background: rgba(11, 11, 15, 0.98);
             backdrop-filter: blur(15px);
             z-index: 10000;
-            display: none; /* Controlled by Media Query */
+            display: none; 
             flex-direction: column;
             align-items: center;
             justify-content: center;
@@ -79,6 +79,15 @@
         .tag-stone { background: #5a5a5a; color: #fff; }
         .tag-wood { background: #73533a; color: #fff; }
 
+        /* Points Display */
+        .p-points {
+            font-size: 0.7rem;
+            color: var(--accent);
+            font-weight: 700;
+            margin-left: 10px;
+            opacity: 0.8;
+        }
+
         /* --- PC SIDEBAR --- */
         nav { width: 240px; background: var(--bg-sidebar); border-right: 1px solid #222; padding: 2rem 1rem; display: flex; flex-direction: column; gap: 2rem; flex-shrink: 0; }
         .nav-logo { font-family: 'Press Start 2P', cursive; font-size: 0.7rem; color: var(--primary); text-align: center; line-height: 1.5; cursor: pointer; }
@@ -115,7 +124,7 @@
         .leaderboard { display: flex; flex-direction: column; gap: 0.8rem; transition: opacity 0.3s ease; }
         .player-card { background: var(--bg-card); border-radius: 12px; padding: 1rem 1.5rem; display: flex; align-items: center; transition: 0.2s; border: 1px solid transparent; cursor: pointer; }
         .player-card:hover { transform: translateX(10px); background: var(--bg-card-hover); border-color: var(--primary); }
-        .rank-num { font-family: 'Press Start 2P', cursive; width: 40px; color: var(--text-muted); font-size: 0.8rem; flex-shrink: 0; }
+        .rank-num { font-family: 'Press Start 2P', cursive; width: 60px; color: var(--text-muted); font-size: 0.8rem; flex-shrink: 0; }
         .avatar { width: 45px; height: 45px; border-radius: 8px; margin: 0 15px; background: #000; image-rendering: pixelated; flex-shrink: 0; }
         .p-name-container { display: flex; align-items: center; flex-grow: 1; overflow: hidden; }
         .p-name { font-weight: 800; font-size: 1.1rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
@@ -147,7 +156,7 @@
         #toast { visibility: hidden; min-width: 250px; background-color: var(--primary); color: #fff; text-align: center; border-radius: 8px; padding: 16px; position: fixed; z-index: 2000; left: 50%; bottom: 30px; transform: translateX(-50%); font-weight: 600; width: 90%; }
         #toast.show { visibility: visible; animation: fadein 0.5s, fadeout 0.5s 2.5s; }
 
-        /* --- MOBILE OPTIMIZATIONS & WARNING TRIGGER --- */
+        /* --- MOBILE OPTIMIZATIONS --- */
         @media (max-width: 768px) {
             #mobile-notice { display: flex; }
             body { flex-direction: column; }
@@ -163,7 +172,7 @@
             .player-card { padding: 0.8rem; gap: 5px; }
             .avatar { margin: 0 10px; width: 35px; height: 35px; }
             .p-name { font-size: 0.95rem; }
-            .rank-num { width: 30px; font-size: 0.7rem; }
+            .rank-num { width: 45px; font-size: 0.6rem; }
             .badge-list { display: none; }
             .player-card::after { content: '➔'; color: var(--text-muted); font-size: 0.8rem; margin-left: auto; }
             .filters { width: 100%; display: flex; justify-content: flex-start; overflow-x: scroll; -webkit-overflow-scrolling: touch; }
@@ -257,10 +266,7 @@
         <div class="modal-box" onclick="event.stopPropagation()">
             <div class="close-modal" onclick="document.getElementById('modal').style.display='none'">✖</div>
             <div id="modal-body">
-                <img id="m-img" src="" class="avatar" style="width: 80px; height: 80px; margin: 0 auto 15px auto; display: block;">
-                <div id="m-name-area" style="margin-bottom: 25px;"></div>
-                <div id="m-rows"></div>
-            </div>
+                </div>
         </div>
     </div>
 
@@ -274,6 +280,13 @@
             nethpot: "neth.png",
             crystal: "crystal.png"
         };
+
+        const pointsMap = {
+            "LT5": 1, "HT5": 3, "LT4": 5, "HT4": 8, "LT3": 12, 
+            "HT3": 15, "LT2": 20, "HT2": 25, "LT1": 30, "HT1": 35
+        };
+
+        const modeOrder = ["sword", "axe", "potion", "nethpot", "crystal"];
         
         const players = [
             {
@@ -309,6 +322,14 @@
                 ]
             }
         ];
+
+        function calculatePoints(playerTiers) {
+            return playerTiers.reduce((sum, t) => sum + (pointsMap[t.r] || 0), 0);
+        }
+
+        function sortTiersByMode(playerTiers) {
+            return [...playerTiers].sort((a, b) => modeOrder.indexOf(a.m) - modeOrder.indexOf(b.m));
+        }
 
         function showMemberStats() {
             const modalBody = document.getElementById('modal-body');
@@ -374,60 +395,5 @@
             const list = document.getElementById('leaderboard');
             list.innerHTML = '';
             
-            let filtered = filterMode === 'all' ? players : players.filter(p => p.tiers.some(t => t.m === filterMode));
-
-            filtered.forEach((p, i) => {
-                const card = document.createElement('div');
-                card.className = 'player-card';
-                
-                const visibleTiers = filterMode === 'all' 
-                    ? p.tiers 
-                    : p.tiers.filter(t => t.m === filterMode);
-
-                const tagClass = `tag-${p.rankTitle.toLowerCase()}`;
-
-                card.onclick = () => {
-                    const modalBody = document.getElementById('modal-body');
-                    modalBody.innerHTML = `
-                        <img id="m-img" src="https://minotar.net/helm/${p.name}/100.png" class="avatar" style="width: 80px; height: 80px; margin: 0 auto 15px auto; display: block;">
-                        <div id="m-name-area" style="margin-bottom: 25px;">
-                            <span class="name-tag ${tagClass}">${p.rankTitle}</span>
-                            <h2 style="font-family: 'Press Start 2P', cursive; font-size: 0.9rem; display: inline-block;">${p.name}</h2>
-                        </div>
-                        <div id="m-rows">${p.tiers.map(t => `
-                            <div class="modal-row">
-                                <div class="mode-label">
-                                    <img src="${mcItems[t.m]}" class="mc-icon" onerror="this.style.display='none'">
-                                    <span>${t.m}</span>
-                                </div>
-                                <span class="b-text ${t.r.toLowerCase()}" style="font-size: 0.7rem;">${t.r}</span>
-                            </div>
-                        `).join('')}</div>
-                    `;
-                    document.getElementById('modal').style.display = 'flex';
-                };
-
-                card.innerHTML = `
-                    <div class="rank-num">#${i + 1}</div>
-                    <img src="https://minotar.net/helm/${p.name}/100.png" class="avatar">
-                    <div class="p-name-container">
-                        <span class="name-tag ${tagClass}">${p.rankTitle}</span>
-                        <div class="p-name">${p.name}</div>
-                    </div>
-                    <div class="badge-list">${visibleTiers.map(createBadge).join('')}</div>
-                `;
-                list.appendChild(card);
-            });
-            document.getElementById('stat-players').innerText = players.length;
-        }
-
-        function filter(m, e) {
-            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-            e.target.classList.add('active');
-            render(m);
-        }
-
-        render();
-    </script>
-</body>
-</html>
+            // 1. Map players with their total points and sort them
+        
