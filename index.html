@@ -24,7 +24,7 @@
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: 'Inter', sans-serif; background: var(--bg-dark); color: var(--text-main); display: flex; min-height: 100vh; overflow-x: hidden; }
 
-        /* --- PC SIDEBAR (Desktop Default) --- */
+        /* --- PC SIDEBAR --- */
         nav { width: 240px; background: var(--bg-sidebar); border-right: 1px solid #222; padding: 2rem 1rem; display: flex; flex-direction: column; gap: 2rem; flex-shrink: 0; }
         .nav-logo { font-family: 'Press Start 2P', cursive; font-size: 0.7rem; color: var(--primary); text-align: center; line-height: 1.5; cursor: pointer; }
         .nav-links { list-style: none; }
@@ -88,37 +88,21 @@
         /* --- MOBILE OPTIMIZATIONS --- */
         @media (max-width: 768px) {
             body { flex-direction: column; }
-            
-            nav { 
-                width: 100%; 
-                height: auto; 
-                padding: 1rem; 
-                border-right: none; 
-                border-bottom: 1px solid #222; 
-                flex-direction: row; 
-                justify-content: space-between; 
-                align-items: center;
-                gap: 1rem;
-            }
+            nav { width: 100%; height: auto; padding: 1rem; border-right: none; border-bottom: 1px solid #222; flex-direction: row; justify-content: space-between; align-items: center; gap: 1rem; }
             .nav-logo { text-align: left; font-size: 0.6rem; }
-            .nav-links { display: none; } /* Hide list on mobile to save space */
+            .nav-links { display: none; }
             nav .btn-discord { width: auto !important; padding: 8px 15px; font-size: 0.7rem; }
-
             main { padding: 1rem; }
             .top-row { flex-direction: column; align-items: stretch; text-align: center; }
             .action-btns { justify-content: center; margin-top: 10px; }
-            
-            .stats-overview { grid-template-columns: 1fr; } /* Stack stats cards */
+            .stats-overview { grid-template-columns: 1fr; }
             .stat-card { padding: 1rem; }
-
             .player-card { padding: 0.8rem; gap: 5px; }
             .avatar { margin: 0 10px; width: 35px; height: 35px; }
             .p-name { font-size: 0.95rem; }
             .rank-num { width: 30px; font-size: 0.7rem; }
-            
-            .badge-list { display: none; } /* Hide badges in main list on mobile for cleaner look, they stay in the modal */
+            .badge-list { display: none; }
             .player-card::after { content: '➔'; color: var(--text-muted); font-size: 0.8rem; margin-left: auto; }
-            
             .filters { width: 100%; display: flex; justify-content: flex-start; overflow-x: scroll; -webkit-overflow-scrolling: touch; }
         }
 
@@ -221,14 +205,23 @@
         function render(filterMode = 'all') {
             const list = document.getElementById('leaderboard');
             list.innerHTML = '';
+            
+            // Filter players who have the selected mode
             let filtered = filterMode === 'all' ? players : players.filter(p => p.tiers.some(t => t.m === filterMode));
 
             filtered.forEach((p, i) => {
                 const card = document.createElement('div');
                 card.className = 'player-card';
+                
+                // Logic: Only show specific badge if a filter is active, otherwise show all
+                const visibleTiers = filterMode === 'all' 
+                    ? p.tiers 
+                    : p.tiers.filter(t => t.m === filterMode);
+
                 card.onclick = () => {
                     document.getElementById('m-name').innerText = p.name;
                     document.getElementById('m-img').src = `https://minotar.net/helm/${p.name}/100.png`;
+                    // Modal ALWAYS shows all tiers as requested
                     document.getElementById('m-rows').innerHTML = p.tiers.map(t => `
                         <div class="modal-row">
                             <div class="mode-label">
@@ -240,11 +233,12 @@
                     `).join('');
                     document.getElementById('modal').style.display = 'flex';
                 };
+
                 card.innerHTML = `
                     <div class="rank-num">#${i + 1}</div>
                     <img src="https://minotar.net/helm/${p.name}/100.png" class="avatar">
                     <div class="p-name">${p.name}</div>
-                    <div class="badge-list">${p.tiers.map(createBadge).join('')}</div>
+                    <div class="badge-list">${visibleTiers.map(createBadge).join('')}</div>
                 `;
                 list.appendChild(card);
             });
