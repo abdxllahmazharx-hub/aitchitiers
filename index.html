@@ -24,6 +24,27 @@
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: 'Inter', sans-serif; background: var(--bg-dark); color: var(--text-main); display: flex; min-height: 100vh; overflow-x: hidden; }
 
+        /* Floating Chat Icon */
+        .floating-chat {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 10px 25px rgba(92, 92, 255, 0.4);
+            transition: 0.3s;
+            z-index: 999;
+            font-size: 1.5rem;
+            border: none;
+        }
+        .floating-chat:hover { transform: scale(1.1) rotate(5deg); background: #4a4aff; }
+
         /* Titles System */
         .name-tag {
             font-size: 0.6rem;
@@ -101,9 +122,9 @@
 
         /* Modal */
         .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); display: none; align-items: center; justify-content: center; backdrop-filter: blur(8px); z-index: 1000; padding: 20px; }
-        .modal-box { background: var(--bg-card); padding: 30px; border-radius: 20px; width: 100%; max-width: 420px; text-align: center; border: 1px solid #333; }
-        .modal-row { display: flex; align-items: center; justify-content: space-between; background: #121218; padding: 12px 20px; border-radius: 10px; margin-bottom: 8px; width: 100%; border: 1px solid #222; }
-        .modal-row .mode-label { display: flex; align-items: center; gap: 10px; font-weight: 700; text-transform: capitalize; }
+        .modal-box { background: var(--bg-card); padding: 30px; border-radius: 20px; width: 100%; max-width: 420px; text-align: center; border: 1px solid #333; position: relative; }
+        .close-modal { position: absolute; top: 15px; right: 15px; cursor: pointer; color: var(--text-muted); font-size: 1.2rem; transition: 0.2s; font-weight: 800; }
+        .close-modal:hover { color: white; transform: scale(1.1); }
 
         #toast { visibility: hidden; min-width: 250px; background-color: var(--primary); color: #fff; text-align: center; border-radius: 8px; padding: 16px; position: fixed; z-index: 2000; left: 50%; bottom: 30px; transform: translateX(-50%); font-weight: 600; width: 90%; }
         #toast.show { visibility: visible; animation: fadein 0.5s, fadeout 0.5s 2.5s; }
@@ -113,7 +134,7 @@
             body { flex-direction: column; }
             nav { width: 100%; height: auto; padding: 1rem; border-right: none; border-bottom: 1px solid #222; flex-direction: row; justify-content: space-between; align-items: center; gap: 1rem; }
             .nav-logo { text-align: left; font-size: 0.6rem; }
-            .nav-links { display: none; }
+            .nav-links, .floating-chat { display: none; }
             nav .btn-discord { width: auto !important; padding: 8px 15px; font-size: 0.7rem; }
             main { padding: 1rem; }
             .top-row { flex-direction: column; align-items: stretch; text-align: center; }
@@ -135,13 +156,15 @@
 </head>
 <body>
 
+    <button class="floating-chat" onclick="showToast('Chatting In Development...')">💬</button>
+
     <nav>
         <div class="nav-logo" onclick="toggleRules(false)">AITCHISON<br>TIERLIST</div>
         <ul class="nav-links">
             <li class="nav-item active" id="nav-rank" onclick="toggleRules(false)">🏆 Rankings</li>
             <li onclick="showToast('Duels in development...')">⚔️ Duels</li>
             <li class="nav-item" id="nav-rules" onclick="toggleRules(true)">📜 Rules</li>
-            <li onclick="showToast('Members list in development...')">👥 Members</li>
+            <li onclick="showMemberStats()">👥 Members</li>
         </ul>
         <div class="nav-footer-btn">
             <a href="https://discord.gg/97dqDeSd" target="_blank" class="btn btn-discord">Join Discord</a>
@@ -202,9 +225,12 @@
 
     <div class="modal" id="modal" onclick="this.style.display='none'">
         <div class="modal-box" onclick="event.stopPropagation()">
-            <img id="m-img" src="" class="avatar" style="width: 80px; height: 80px; margin: 0 auto 15px auto; display: block;">
-            <div id="m-name-area" style="margin-bottom: 25px;"></div>
-            <div id="m-rows"></div>
+            <div class="close-modal" onclick="document.getElementById('modal').style.display='none'">✖</div>
+            <div id="modal-body">
+                <img id="m-img" src="" class="avatar" style="width: 80px; height: 80px; margin: 0 auto 15px auto; display: block;">
+                <div id="m-name-area" style="margin-bottom: 25px;"></div>
+                <div id="m-rows"></div>
+            </div>
         </div>
     </div>
 
@@ -253,6 +279,17 @@
                 ]
             }
         ];
+
+        function showMemberStats() {
+            const modalBody = document.getElementById('modal-body');
+            modalBody.innerHTML = `
+                <h2 style="font-family: 'Press Start 2P', cursive; font-size: 1rem; color: var(--primary); margin-bottom: 20px;">MEMBERS LIST</h2>
+                <div class="modal-row" style="justify-content: center; font-weight: 800; font-size: 1.2rem; background: transparent; border: none;">
+                    Member 16 | Registers 4
+                </div>
+            `;
+            document.getElementById('modal').style.display = 'flex';
+        }
 
         function toggleRules(show) {
             const rankView = document.getElementById('rank-view');
@@ -320,21 +357,23 @@
                 const tagClass = `tag-${p.rankTitle.toLowerCase()}`;
 
                 card.onclick = () => {
-                    const nameArea = document.getElementById('m-name-area');
-                    nameArea.innerHTML = `
-                        <span class="name-tag ${tagClass}">${p.rankTitle}</span>
-                        <h2 style="font-family: 'Press Start 2P', cursive; font-size: 0.9rem; display: inline-block;">${p.name}</h2>
-                    `;
-                    document.getElementById('m-img').src = `https://minotar.net/helm/${p.name}/100.png`;
-                    document.getElementById('m-rows').innerHTML = p.tiers.map(t => `
-                        <div class="modal-row">
-                            <div class="mode-label">
-                                <img src="${mcItems[t.m]}" class="mc-icon" onerror="this.style.display='none'">
-                                <span>${t.m}</span>
-                            </div>
-                            <span class="b-text ${t.r.toLowerCase()}" style="font-size: 0.7rem;">${t.r}</span>
+                    const modalBody = document.getElementById('modal-body');
+                    modalBody.innerHTML = `
+                        <img id="m-img" src="https://minotar.net/helm/${p.name}/100.png" class="avatar" style="width: 80px; height: 80px; margin: 0 auto 15px auto; display: block;">
+                        <div id="m-name-area" style="margin-bottom: 25px;">
+                            <span class="name-tag ${tagClass}">${p.rankTitle}</span>
+                            <h2 style="font-family: 'Press Start 2P', cursive; font-size: 0.9rem; display: inline-block;">${p.name}</h2>
                         </div>
-                    `).join('');
+                        <div id="m-rows">${p.tiers.map(t => `
+                            <div class="modal-row">
+                                <div class="mode-label">
+                                    <img src="${mcItems[t.m]}" class="mc-icon" onerror="this.style.display='none'">
+                                    <span>${t.m}</span>
+                                </div>
+                                <span class="b-text ${t.r.toLowerCase()}" style="font-size: 0.7rem;">${t.r}</span>
+                            </div>
+                        `).join('')}</div>
+                    `;
                     document.getElementById('modal').style.display = 'flex';
                 };
 
