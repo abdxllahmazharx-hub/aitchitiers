@@ -257,10 +257,11 @@
         potion: "pot.png",  
         nethpot: "neth.png",  
         crystal: "crystal.png",
-        cart: "cart.png"
+        cart: "cart.png",
+        mace: "mace.png"
     };  
       
-    const modePattern = ["sword", "axe", "potion", "nethpot", "crystal", "cart"];
+    const modePattern = ["sword", "axe", "potion", "nethpot", "crystal", "cart", "mace"];
     const tierPoints = {
         "LT5": 1, "HT5": 3, "LT4": 5, "HT4": 8, "LT3": 12,  
         "HT3": 15, "LT2": 20, "HT2": 25, "LT1": 30, "HT1": 35
@@ -272,7 +273,9 @@
             rankTitle: "Iron",  
             tiers: [  
                 {m: "sword", r: "LT3"}, {m: "axe", r: "LT3"},   
-                {m: "potion", r: "LT3"}, {m: "nethpot", r: "LT3"}, {m: "crystal", r: "HT4"}, {m: "cart", r: "LT3"}  
+                {m: "potion", r: "LT3"}, {m: "nethpot", r: "LT3"}, 
+                {m: "crystal", r: "HT4"}, {m: "cart", r: "LT3"},
+                {m: "mace", r: "HT4"}
             ]  
         },  
         {  
@@ -280,7 +283,8 @@
             rankTitle: "Stone",  
             tiers: [  
                 {m: "sword", r: "LT4"}, {m: "axe", r: "LT4"},   
-                {m: "potion", r: "HT5"}, {m: "nethpot", r: "LT4"}
+                {m: "potion", r: "HT5"}, {m: "nethpot", r: "LT4"},
+                {m: "mace", r: "HT5"}
             ]  
         },  
         {  
