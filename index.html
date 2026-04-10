@@ -66,7 +66,6 @@
         letter-spacing: 0.5px;
     }
 
-    /* --- ADDED: DROPDOWN STYLES --- */
     .profile-dropdown {
         position: absolute;
         top: calc(100% + 10px);
@@ -385,10 +384,9 @@
     import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-auth.js";
     import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
 
-    // PASTE YOUR CONFIG FROM LOGIN.HTML HERE
     const firebaseConfig = {
         apiKey: "AIzaSyDRJ9-AY5oy-oZ8ni5mWEYm2KWn72w1n3s",
-        authDomain: "AIzaSyDRJ9-AY5oy-oZ8ni5mWEYm2KWn72w1n3s",
+        authDomain: "aitchison-tier-testing.firebaseapp.com",
         projectId: "aitchison-tier-testing",
         storageBucket: "aitchison-tier-testing.firebasestorage.app",
         messagingSenderId: "206635171971",
@@ -461,20 +459,15 @@
     const players = [  
         { name: "x0_Encrypted", rankTitle: "Iron", tiers: [ {m: "sword", r: "LT3"}, {m: "axe", r: "LT3"}, {m: "potion", r: "LT3"}, {m: "nethpot", r: "LT3"}, {m: "crystal", r: "HT4"}, {m: "cart", r: "LT3"}, {m: "mace", r: "HT4"} ] },  
         { name: "x0__StableDFNN", rankTitle: "Stone", tiers: [ {m: "sword", r: "LT4"}, {m: "axe", r: "LT4"}, {m: "potion", r: "HT5"}, {m: "nethpot", r: "LT4"}, {m: "mace", r: "HT5"} ] },  
-
         { name: "ItzzApeluu", rankTitle: "Stone", tiers: [ {m: "sword", r: "LT4"}, {m: "crystal", r: "HT4"} ] },
-
         { name: "Dr1pzide_", rankTitle: "Stone", tiers: [ {m: "sword", r: "LT4"}, {m: "axe", r: "HT5"}, {m: "potion", r: "HT4"} ] },  
         { name: "BladeOP_", rankTitle: "Wood", tiers: [ {m: "sword", r: "HT5"}, {m: "axe", r: "HT5"}, {m: "crystal", r: "LT4"} ] },
-
-
         { name: "Devil_Terror", rankTitle: "Wood", tiers: [ {m: "sword", r: "LT4"} ] },
         { name: "Zylo_Here", rankTitle: "Wood", tiers: [ {m: "crystal", r: "HT5"}, {m: "nethpot", r: "LT5"} ] },
-{ name: "Ryancams", rankTitle: "Wood", tiers: [ {m: "axe", r: "HT5"} ] },
-
+        { name: "Ryancams", rankTitle: "Wood", tiers: [ {m: "axe", r: "HT5"} ] },
         { name: "zen_it", rankTitle: "wood", tiers: [ {m: "crystal", r: "HT4"} ] },
         { name: "LondonBrandon", rankTitle: "Wood", tiers: [ {m: "sword", r: "LT5"}, {m: "crystal", r: "LT5"}, {m: "nethpot", r: "LT5"}, {m: "potion", r: "LT5"} ] },
-{ name: "DeathK4ge", rankTitle: "Wood", tiers: [ {m: "sword", r: "LT4"}, {m: "nethpot", r: "HT5"} ] },
+        { name: "DeathK4ge", rankTitle: "Wood", tiers: [ {m: "sword", r: "LT4"}, {m: "nethpot", r: "HT5"} ] },
         { name: "Talal_xD", rankTitle: "Wood", tiers: [ {m: "sword", r: "HT5"}, {m: "axe", r: "LT5"}, {m: "crystal", r: "LT5"}, {m: "nethpot", r: "HT5"} ] }  
     ];  
 
@@ -516,7 +509,7 @@
                 setTimeout(() => rankView.style.opacity = '1', 10);  
             }, 300);  
             title.innerText = "Global Rankings";  
-            actionContainer.innerHTML = ''; // Keep empty as registration button is removed
+            actionContainer.innerHTML = ''; 
             navRules.classList.remove('active');  
             navRank.classList.add('active');  
         }  
