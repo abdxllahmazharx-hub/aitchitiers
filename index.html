@@ -1,4 +1,5 @@
-<!DOCTYPE html>  <html lang="en">  
+<!DOCTYPE html>  
+<html lang="en">  
 <head>  
     <meta charset="UTF-8">  
     <meta name="viewport" content="width=device-width, initial-scale=1.0">  
@@ -162,7 +163,6 @@
         .avatar { margin: 0 10px; width: 35px; height: 35px; }  
         .p-name { font-size: 0.95rem; }  
         .rank-num { width: 30px; font-size: 0.7rem; }  
-        /* THIS IS THE FIX: ONLY hides badges on the player card, keeps them visible in the modal */
         .player-card .badge-list { display: none; }  
         .player-card::after { content: '➔'; color: var(--text-muted); font-size: 0.8rem; margin-left: auto; }  
         .filters { width: 100%; display: flex; justify-content: flex-start; overflow-x: scroll; -webkit-overflow-scrolling: touch; }  
@@ -272,7 +272,6 @@
         crystal: "crystal.png"  
     };  
       
-    // --- NEW: Custom Sequences & Scoring System ---
     const modePattern = ["sword", "axe", "potion", "nethpot", "crystal"];
     const tierPoints = {
         "LT5": 1, "HT5": 3, "LT4": 5, "HT4": 8, "LT3": 12, 
@@ -386,30 +385,17 @@
           
         players.forEach(p => {
             p.totalPoints = p.tiers.reduce((sum, t) => sum + (tierPoints[t.r] || 0), 0);
-            
-            p.tiers.sort((a, b) => {
-                let indexA = modePattern.indexOf(a.m);
-                let indexB = modePattern.indexOf(b.m);
-                if (indexA === -1) indexA = 999; 
-                if (indexB === -1) indexB = 999;
-                return indexA - indexB;
-            });
+            p.tiers.sort((a, b) => modePattern.indexOf(a.m) - modePattern.indexOf(b.m));
         });
 
         players.sort((a, b) => b.totalPoints - a.totalPoints);
-
         let filtered = filterMode === 'all' ? players : players.filter(p => p.tiers.some(t => t.m === filterMode));  
-
         document.getElementById('stat-players').innerText = players.length;
 
         filtered.forEach((p, i) => {  
             const card = document.createElement('div');  
             card.className = 'player-card';  
-              
-            const visibleTiers = filterMode === 'all'   
-                ? p.tiers   
-                : p.tiers.filter(t => t.m === filterMode);  
-
+            const visibleTiers = filterMode === 'all' ? p.tiers : p.tiers.filter(t => t.m === filterMode);  
             const tagClass = `tag-${p.rankTitle.toLowerCase()}`;  
 
             card.onclick = () => {
@@ -445,11 +431,9 @@
                     ${visibleTiers.map(t => createBadge(t)).join('')}
                 </div>
             `;
-
             list.appendChild(card);
         });  
     }
-
     render('all');
 </script>  
 </body>  
