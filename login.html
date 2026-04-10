@@ -6,6 +6,7 @@
 <title>Login</title>
 
 <style>
+/* SAME UI - DO NOT CHANGE */
 body {
     margin:0;
     font-family: 'Inter', sans-serif;
@@ -96,12 +97,6 @@ button {
     text-align:center;
 }
 
-.pfp {
-    display:flex;
-    justify-content:space-around;
-    margin-top:10px;
-}
-
 .pfp img {
     width:60px;
     border-radius:8px;
@@ -135,7 +130,7 @@ button {
     </div>
 </div>
 
-<!-- SETUP POPUP -->
+<!-- POPUP -->
 <div class="popup" id="setupPopup">
     <div class="popup-box">
         <h3>Setup Profile</h3>
@@ -147,39 +142,40 @@ button {
         <input id="mcname" placeholder="Minecraft Username">
 
         <div class="pfp">
-            <img src="https://mc-heads.net/avatar/Steve" onclick="selectPFP(this,'steve')">
-            <img src="https://mc-heads.net/avatar/Alex" onclick="selectPFP(this,'alex')">
+            <img src="https://i.pinimg.com/474x/54/f4/b5/54f4b55a59ff9ddf2a2655c7f35e4356.jpg"
+                 onclick="selectPFP(this,'steve')">
+
+            <img src="https://i.pinimg.com/originals/a9/a4/ec/a9a4ec03fa9afc407028ca40c20ed774.jpg"
+                 onclick="selectPFP(this,'alex')">
         </div>
 
         <button onclick="saveProfile()">Continue</button>
     </div>
 </div>
 
-<!-- ONLY JS FIXED -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { 
-    getAuth, 
-    signInWithPopup, 
-    GoogleAuthProvider, 
-    signInWithEmailAndPassword,
-    createUserWithEmailAndPassword
+import {
+getAuth,
+signInWithPopup,
+GoogleAuthProvider,
+signInWithEmailAndPassword
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
 import {
-    getFirestore,
-    doc,
-    getDoc,
-    setDoc
+getFirestore,
+doc,
+setDoc,
+getDoc
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyDRJ9-AY5oy-oZ8ni5mWEYm2KWn72w1n3s",
-  authDomain: "aitchison-tier-testing.firebaseapp.com",
-  projectId: "aitchison-tier-testing",
-  storageBucket: "aitchison-tier-testing.firebasestorage.app",
-  messagingSenderId: "206635171971",
-  appId: "1:206635171971:web:5c7b4aad54adca55c85bb6"
+apiKey: "AIzaSyDRJ9-AY5oy-oZ8ni5mWEYm2KWn72w1n3s",
+authDomain: "aitchison-tier-testing.firebaseapp.com",
+projectId: "aitchison-tier-testing",
+storageBucket: "aitchison-tier-testing.firebasestorage.app",
+messagingSenderId: "206635171971",
+appId: "1:206635171971:web:5c7b4aad54adca55c85bb6"
 };
 
 const app = initializeApp(firebaseConfig);
@@ -190,35 +186,20 @@ const provider = new GoogleAuthProvider();
 let selectedPFP = "steve";
 let currentUser = null;
 
-/* EMAIL LOGIN */
+/* LOGIN */
 window.emailLogin = async () => {
     const email = document.getElementById("email").value;
     const pass = document.getElementById("password").value;
 
     try {
-        let userCred;
-
-        try {
-            userCred = await signInWithEmailAndPassword(auth, email, pass);
-        } catch {
-            userCred = await createUserWithEmailAndPassword(auth, email, pass);
-        }
-
-        const user = userCred.user;
-
-        if (!user.emailVerified) {
-            alert("⚠ Verify email first (check spam folder too)");
-            return;
-        }
-
-        checkUser(user);
-
+        const userCred = await signInWithEmailAndPassword(auth, email, pass);
+        checkUser(userCred.user);
     } catch (e) {
         alert(e.message);
     }
 };
 
-/* GOOGLE LOGIN */
+/* GOOGLE */
 window.googleLogin = async () => {
     const result = await signInWithPopup(auth, provider);
     checkUser(result.user);
@@ -238,21 +219,21 @@ async function checkUser(user) {
     }
 }
 
-/* PFP SELECT */
+/* PFP */
 window.selectPFP = (el, type) => {
     document.querySelectorAll(".pfp img").forEach(i => i.classList.remove("selected"));
     el.classList.add("selected");
     selectedPFP = type;
 };
 
-/* SAVE PROFILE */
+/* SAVE */
 window.saveProfile = async () => {
     const name = document.getElementById("mcname").value;
 
     if (!name) return alert("Enter username");
 
     await setDoc(doc(db, "users", currentUser.uid), {
-        name: name,
+        name,
         pfp: selectedPFP
     });
 
