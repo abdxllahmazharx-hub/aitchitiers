@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login</title>
+
+<style>
+body {
+    margin:0;
+    font-family: 'Inter', sans-serif;
+    background:#0f0f0f;
+    color:white;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+}
+
+.container {
+    background:#1a1a1a;
+    padding:30px;
+    border-radius:12px;
+    width:320px;
+    box-shadow:0 0 20px rgba(0,0,0,0.5);
+}
+
+h2 {
+    text-align:center;
+    margin-bottom:20px;
+}
+
+input {
+    width:100%;
+    padding:10px;
+    margin-bottom:10px;
+    border:none;
+    border-radius:6px;
+    background:#2a2a2a;
+    color:white;
+}
+
+button {
+    width:100%;
+    padding:10px;
+    border:none;
+    border-radius:6px;
+    background:#5865F2;
+    color:white;
+    font-weight:bold;
+    cursor:pointer;
+    margin-top:10px;
+}
+
+.google-btn {
+    background:white;
+    color:black;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+}
+
+.google-btn img {
+    width:18px;
+}
+
+.link {
+    margin-top:15px;
+    text-align:center;
+    font-size:14px;
+}
+
+.link a {
+    color:#5865F2;
+    text-decoration:none;
+}
+
+.popup {
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,0.8);
+    display:none;
+    justify-content:center;
+    align-items:center;
+}
+
+.popup-box {
+    background:#1a1a1a;
+    padding:20px;
+    border-radius:10px;
+    width:300px;
+    text-align:center;
+}
+
+.pfp {
+    display:flex;
+    justify-content:space-around;
+    margin-top:10px;
+}
+
+.pfp img {
+    width:60px;
+    border-radius:8px;
+    cursor:pointer;
+    border:2px solid transparent;
+}
+
+.pfp img.selected {
+    border:2px solid #5865F2;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+    <h2>Login</h2>
+
+    <input id="email" placeholder="Email">
+    <input id="password" type="password" placeholder="Password">
+
+    <button onclick="emailLogin()">Login</button>
+
+    <button class="google-btn" onclick="googleLogin()">
+        <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg">
+        Sign in with Google
+    </button>
+
+    <div class="link">
+        Don’t have an account? <a href="sign.html">Create Account</a>
+    </div>
+</div>
+
+<!-- SETUP POPUP -->
+<div class="popup" id="setupPopup">
+    <div class="popup-box">
+        <h3>Setup Profile</h3>
+
+        <p style="font-size:12px; color:#aaa;">
+        ⚠️ Enter your REAL Minecraft username
+        </p>
+
+        <input id="mcname" placeholder="Minecraft Username">
+
+        <div class="pfp">
+            <img src="https://mc-heads.net/avatar/Steve" onclick="selectPFP(this,'steve')">
+            <img src="https://mc-heads.net/avatar/Alex" onclick="selectPFP(this,'alex')">
+        </div>
+
+        <button onclick="saveProfile()">Continue</button>
+    </div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { 
+    getAuth, 
+    signInWithPopup, 
+    GoogleAuthProvider, 
+    signInWithEmailAndPassword,
+    createUserWithEmailAndPassword,
+    onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+import {
+    getFirestore,
+    doc,
+    setDoc,
+    getDoc
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDRJ9-AY5oy-oZ8ni5mWEYm2KWn72w1n3s",
+  authDomain: "aitchison-tier-testing.firebaseapp.com",
+  projectId: "aitchison-tier-testing",
+  storageBucket: "aitchison-tier-testing.firebasestorage.app",
+  messagingSenderId: "206635171971",
+  appId: "1:206635171971:web:5c7b4aad54adca55c85bb6"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth();
+const db = getFirestore();
+const provider = new GoogleAuthProvider();
+
+let selectedPFP = "steve";
+let currentUser = null;
+
+window.emailLogin = async () => {
+    const email = email.value;
+    const password = password.value;
+
+    try {
+        const user = await signInWithEmailAndPassword(auth, email, password);
+        checkUser(user.user);
+    } catch {
+        const user = await createUserWithEmailAndPassword(auth, email, password);
+        checkUser(user.user);
+    }
+};
+
+window.googleLogin = async () => {
+    const result = await signInWithPopup(auth, provider);
+    checkUser(result.user);
+};
+
+async function checkUser(user) {
+    currentUser = user;
+    const ref = doc(db, "users", user.uid);
+    const snap = await getDoc(ref);
+
+    if (!snap.exists()) {
+        document.getElementById("setupPopup").style.display = "flex";
+    } else {
+        window.location.href = "index.html";
+    }
+}
+
+window.selectPFP = (el, type) => {
+    document.querySelectorAll(".pfp img").forEach(i => i.classList.remove("selected"));
+    el.classList.add("selected");
+    selectedPFP = type;
+};
+
+window.saveProfile = async () => {
+    const name = document.getElementById("mcname").value;
+
+    if (!name) return alert("Enter username");
+
+    await setDoc(doc(db, "users", currentUser.uid), {
+        name: name,
+        pfp: selectedPFP
+    });
+
+    window.location.href = "index.html";
+};
+</script>
+
+</body>
+</html>
