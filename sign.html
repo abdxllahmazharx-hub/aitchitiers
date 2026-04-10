@@ -113,7 +113,6 @@ button {
     border:2px solid #5865F2;
 }
 
-/* NEW SMALL NOTE */
 .note {
     font-size:12px;
     color:#ff5555;
@@ -131,7 +130,6 @@ button {
     <input id="password" type="password" placeholder="Password">
 
     <button onclick="emailSignup()">Create Account</button>
-
     <button onclick="resendVerification()">Resend Verification Email</button>
 
     <button class="google-btn" onclick="googleSignup()">
@@ -148,7 +146,7 @@ button {
     </div>
 </div>
 
-<!-- SETUP POPUP -->
+<!-- POPUP -->
 <div class="popup" id="setupPopup">
     <div class="popup-box">
         <h3>Setup Profile</h3>
@@ -160,40 +158,42 @@ button {
         <input id="mcname" placeholder="Minecraft Username">
 
         <div class="pfp">
-            <img src="https://mc-heads.net/avatar/Steve" onclick="selectPFP(this,'steve')">
-            <img src="https://mc-heads.net/avatar/Alex" onclick="selectPFP(this,'alex')">
+            <img src="https://i.pinimg.com/474x/54/f4/b5/54f4b55a59ff9ddf2a2655c7f35e4356.jpg"
+                 onclick="selectPFP(this,'steve')">
+
+            <img src="https://i.pinimg.com/originals/a9/a4/ec/a9a4ec03fa9afc407028ca40c20ed774.jpg"
+                 onclick="selectPFP(this,'alex')">
         </div>
 
         <button onclick="saveProfile()">Continue</button>
     </div>
 </div>
 
-<!-- ONLY JS FIXED, UI 100% SAME -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { 
-    getAuth, 
-    signInWithPopup, 
-    GoogleAuthProvider, 
-    createUserWithEmailAndPassword,
-    sendEmailVerification,
-    signOut
+import {
+getAuth,
+signInWithPopup,
+GoogleAuthProvider,
+createUserWithEmailAndPassword,
+sendEmailVerification,
+signOut
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
 import {
-    getFirestore,
-    doc,
-    setDoc,
-    getDoc
+getFirestore,
+doc,
+setDoc,
+getDoc
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyDRJ9-AY5oy-oZ8ni5mWEYm2KWn72w1n3s",
-  authDomain: "aitchison-tier-testing.firebaseapp.com",
-  projectId: "aitchison-tier-testing",
-  storageBucket: "aitchison-tier-testing.firebasestorage.app",
-  messagingSenderId: "206635171971",
-  appId: "1:206635171971:web:5c7b4aad54adca55c85bb6"
+apiKey: "AIzaSyDRJ9-AY5oy-oZ8ni5mWEYm2KWn72w1n3s",
+authDomain: "aitchison-tier-testing.firebaseapp.com",
+projectId: "aitchison-tier-testing",
+storageBucket: "aitchison-tier-testing.firebasestorage.app",
+messagingSenderId: "206635171971",
+appId: "1:206635171971:web:5c7b4aad54adca55c85bb6"
 };
 
 const app = initializeApp(firebaseConfig);
@@ -225,15 +225,10 @@ window.emailSignup = async () => {
     }
 };
 
-/* RESEND VERIFICATION (FIXED - NO DUPLICATE ACCOUNT BUG) */
+/* RESEND */
 window.resendVerification = async () => {
     const email = document.getElementById("email").value;
     const password = document.getElementById("password").value;
-
-    if (!email || !password) {
-        alert("Enter email + password first");
-        return;
-    }
 
     try {
         const userCred = await createUserWithEmailAndPassword(auth, email, password);
@@ -244,8 +239,8 @@ window.resendVerification = async () => {
 
         await signOut(auth);
 
-    } catch (e) {
-        alert("If account exists, just login instead.");
+    } catch {
+        alert("If account exists, login instead");
     }
 };
 
@@ -269,7 +264,7 @@ async function checkUser(user) {
     }
 }
 
-/* PFP SELECT */
+/* PFP */
 window.selectPFP = (el, type) => {
     document.querySelectorAll(".pfp img").forEach(i => i.classList.remove("selected"));
     el.classList.add("selected");
@@ -283,7 +278,7 @@ window.saveProfile = async () => {
     if (!name) return alert("Enter username");
 
     await setDoc(doc(db, "users", currentUser.uid), {
-        name: name,
+        name,
         pfp: selectedPFP
     });
 
