@@ -162,8 +162,7 @@ import {
     signInWithPopup, 
     GoogleAuthProvider, 
     signInWithEmailAndPassword,
-    createUserWithEmailAndPassword,
-    onAuthStateChanged
+    createUserWithEmailAndPassword
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
 import {
@@ -183,33 +182,52 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-const auth = getAuth();
-const db = getFirestore();
+const auth = getAuth(app);
+const db = getFirestore(app);
 const provider = new GoogleAuthProvider();
 
 let selectedPFP = "steve";
 let currentUser = null;
 
+/* FIXED EMAIL LOGIN */
 window.emailLogin = async () => {
-    const email = email.value;
-    const password = password.value;
+    const email = document.getElementById("email").value;
+    const pass = document.getElementById("password").value;
 
     try {
-        const user = await signInWithEmailAndPassword(auth, email, password);
-        checkUser(user.user);
-    } catch {
-        const user = await createUserWithEmailAndPassword(auth, email, password);
-        checkUser(user.user);
+        let userCred;
+
+        try {
+            userCred = await signInWithEmailAndPassword(auth, email, pass);
+        } catch {
+            userCred = await createUserWithEmailAndPassword(auth, email, pass);
+        }
+
+        const user = userCred.user;
+
+        // IMPORTANT EMAIL CHECK
+        if (!user.emailVerified) {
+            alert("⚠ Please verify your email first. Also check Spam folder.");
+            return;
+        }
+
+        checkUser(user);
+
+    } catch (e) {
+        alert(e.message);
     }
 };
 
+/* GOOGLE LOGIN */
 window.googleLogin = async () => {
     const result = await signInWithPopup(auth, provider);
     checkUser(result.user);
 };
 
+/* CHECK USER EXISTS */
 async function checkUser(user) {
     currentUser = user;
+
     const ref = doc(db, "users", user.uid);
     const snap = await getDoc(ref);
 
@@ -220,12 +238,14 @@ async function checkUser(user) {
     }
 }
 
+/* FIXED PFP SELECT */
 window.selectPFP = (el, type) => {
     document.querySelectorAll(".pfp img").forEach(i => i.classList.remove("selected"));
     el.classList.add("selected");
     selectedPFP = type;
 };
 
+/* SAVE PROFILE */
 window.saveProfile = async () => {
     const name = document.getElementById("mcname").value;
 
