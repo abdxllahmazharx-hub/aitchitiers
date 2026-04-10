@@ -155,6 +155,7 @@ button {
     </div>
 </div>
 
+<!-- ONLY JS FIXED -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { 
@@ -168,8 +169,8 @@ import {
 import {
     getFirestore,
     doc,
-    setDoc,
-    getDoc
+    getDoc,
+    setDoc
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -189,7 +190,7 @@ const provider = new GoogleAuthProvider();
 let selectedPFP = "steve";
 let currentUser = null;
 
-/* FIXED EMAIL LOGIN */
+/* EMAIL LOGIN */
 window.emailLogin = async () => {
     const email = document.getElementById("email").value;
     const pass = document.getElementById("password").value;
@@ -205,9 +206,8 @@ window.emailLogin = async () => {
 
         const user = userCred.user;
 
-        // IMPORTANT EMAIL CHECK
         if (!user.emailVerified) {
-            alert("⚠ Please verify your email first. Also check Spam folder.");
+            alert("⚠ Verify email first (check spam folder too)");
             return;
         }
 
@@ -224,7 +224,7 @@ window.googleLogin = async () => {
     checkUser(result.user);
 };
 
-/* CHECK USER EXISTS */
+/* CHECK USER */
 async function checkUser(user) {
     currentUser = user;
 
@@ -238,7 +238,7 @@ async function checkUser(user) {
     }
 }
 
-/* FIXED PFP SELECT */
+/* PFP SELECT */
 window.selectPFP = (el, type) => {
     document.querySelectorAll(".pfp img").forEach(i => i.classList.remove("selected"));
     el.classList.add("selected");
