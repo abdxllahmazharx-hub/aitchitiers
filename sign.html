@@ -112,6 +112,13 @@ button {
 .pfp img.selected {
     border:2px solid #5865F2;
 }
+
+/* NEW SMALL NOTE */
+.note {
+    font-size:12px;
+    color:#ff5555;
+    margin-top:10px;
+}
 </style>
 </head>
 
@@ -125,10 +132,16 @@ button {
 
     <button onclick="emailSignup()">Create Account</button>
 
+    <button onclick="resendVerification()">Resend Verification Email</button>
+
     <button class="google-btn" onclick="googleSignup()">
         <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg">
         Sign up with Google
     </button>
+
+    <div class="note">
+        ⚠ Check inbox + spam folder for verification email
+    </div>
 
     <div class="link">
         Already have an account? <a href="login.html">Login</a>
@@ -161,7 +174,9 @@ import {
     getAuth, 
     signInWithPopup, 
     GoogleAuthProvider, 
-    createUserWithEmailAndPassword
+    createUserWithEmailAndPassword,
+    sendEmailVerification,
+    signOut
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
 import {
@@ -188,19 +203,58 @@ const provider = new GoogleAuthProvider();
 let selectedPFP = "steve";
 let currentUser = null;
 
+/* EMAIL SIGNUP */
 window.emailSignup = async () => {
-    const email = email.value;
-    const password = password.value;
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
 
-    const user = await createUserWithEmailAndPassword(auth, email, password);
-    checkUser(user.user);
+    try {
+        const userCred = await createUserWithEmailAndPassword(auth, email, password);
+
+        currentUser = userCred.user;
+
+        await sendEmailVerification(currentUser);
+
+        alert("Verification sent! Check inbox + spam folder");
+
+        await signOut(auth);
+
+    } catch (e) {
+        alert(e.message);
+    }
 };
 
+/* RESEND VERIFICATION */
+window.resendVerification = async () => {
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+
+    if (!email || !password) {
+        alert("Enter email + password first");
+        return;
+    }
+
+    try {
+        const userCred = await createUserWithEmailAndPassword(auth, email, password);
+
+        await sendEmailVerification(userCred.user);
+
+        alert("Verification resent! Check spam folder too");
+
+        await signOut(auth);
+
+    } catch (e) {
+        alert("If account already exists, just login then resend email");
+    }
+};
+
+/* GOOGLE SIGNUP */
 window.googleSignup = async () => {
     const result = await signInWithPopup(auth, provider);
     checkUser(result.user);
 };
 
+/* CHECK USER */
 async function checkUser(user) {
     currentUser = user;
 
@@ -214,12 +268,14 @@ async function checkUser(user) {
     }
 }
 
+/* PFP SELECT */
 window.selectPFP = (el, type) => {
     document.querySelectorAll(".pfp img").forEach(i => i.classList.remove("selected"));
     el.classList.add("selected");
     selectedPFP = type;
 };
 
+/* SAVE PROFILE */
 window.saveProfile = async () => {
     const name = document.getElementById("mcname").value;
 
