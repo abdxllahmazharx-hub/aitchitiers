@@ -116,11 +116,46 @@
     .rule-num { font-family: 'Press Start 2P', cursive; font-size: 0.8rem; color: var(--primary); margin-top: 4px; }  
     .rule-text { line-height: 1.6; font-weight: 500; }  
 
-    .mc-icon { width: 24px; height: 24px; image-rendering: pixelated; object-fit: contain; }  
+    .mc-icon { width: 20px; height: 20px; image-rendering: pixelated; object-fit: contain; }  
 
-    .badge-list { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 2px; }  
-    .badge { background: rgba(0,0,0,0.5); padding: 6px 12px; border-radius: 8px; display: flex; align-items: center; gap: 8px; border: 1px solid rgba(255,255,255,0.05); flex-shrink: 0; }  
-    .b-text { font-family: 'Press Start 2P', cursive; font-size: 0.5rem; }  
+    /* --- UPDATED COMPACT TIERS & TOOLTIP --- */
+    .badge-list { display: flex; gap: 2px; overflow: visible; padding-bottom: 2px; align-items: center; }  
+    .badge { 
+        background: rgba(0,0,0,0.6); 
+        padding: 4px 8px; 
+        border-radius: 4px; 
+        display: flex; 
+        align-items: center; 
+        gap: 5px; 
+        border: 1px solid rgba(255,255,255,0.05); 
+        flex-shrink: 0; 
+        position: relative; /* For tooltip positioning */
+    }  
+    .b-text { font-family: 'Press Start 2P', cursive; font-size: 0.45rem; }  
+
+    /* Hover Tooltip Logic */
+    .badge::after {
+        content: attr(data-pts);
+        position: absolute;
+        bottom: 125%;
+        left: 50%;
+        transform: translateX(-50%) translateY(5px);
+        background: var(--primary);
+        color: white;
+        padding: 3px 6px;
+        border-radius: 4px;
+        font-size: 0.55rem;
+        font-family: 'Press Start 2P', cursive;
+        opacity: 0;
+        pointer-events: none;
+        transition: 0.2s;
+        z-index: 100;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+    }
+    .badge:hover::after {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
 
     .ht1 { color: var(--tier-ht1); } .ht2 { color: var(--tier-ht2); } .ht3 { color: var(--tier-ht3); }  
     .ht4 { color: var(--tier-ht4); } .ht5 { color: var(--tier-ht5); } .lt3 { color: var(--tier-lt3); } .lt4 { color: var(--tier-lt4); } .lt5 { color: var(--tier-lt5); }  
@@ -381,8 +416,9 @@
     }  
 
     function createBadge(t) {  
+        const pts = tierPoints[t.r] || 0;
         return `  
-            <div class="badge">  
+            <div class="badge" data-pts="${pts}">  
                 <img src="${mcItems[t.m] || ''}" class="mc-icon" onerror="this.style.display='none'">  
                 <span class="b-text ${t.r.toLowerCase()}">${t.r}</span>  
             </div>`;  
