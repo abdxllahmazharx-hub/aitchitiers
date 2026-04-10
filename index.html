@@ -59,22 +59,24 @@
     
     .msg { display: flex; gap: 8px; align-items: flex-start; max-width: 85%; }
     .msg img { width: 24px; height: 24px; border-radius: 4px; image-rendering: pixelated; }
-    .msg-body { background: #252530; padding: 8px 12px; border-radius: 10px; font-size: 13px; line-height: 1.4; }
+    .msg-body { background: #252530; padding: 8px 12px; border-radius: 10px; font-size: 13px; line-height: 1.4; word-break: break-word; }
     .msg-name { font-size: 10px; font-weight: 800; color: var(--primary); margin-bottom: 2px; }
     .msg.mine { align-self: flex-end; flex-direction: row-reverse; }
     .msg.mine .msg-body { background: var(--primary); }
     .msg.mine .msg-name { text-align: right; color: white; }
 
-    .chat-input-area { padding: 10px; border-top: 1px solid #333; display: flex; gap: 8px; }
+    .chat-input-area { padding: 10px; border-top: 1px solid #333; display: flex; flex-direction: column; gap: 5px; }
+    .input-row { display: flex; gap: 8px; }
     .chat-input-area input { flex: 1; background: #2a2a35; border: none; padding: 8px 12px; border-radius: 6px; color: white; font-size: 13px; }
     .chat-input-area button { background: var(--primary); border: none; color: white; padding: 8px 12px; border-radius: 6px; cursor: pointer; font-weight: bold; }
+    .char-limit { font-size: 9px; color: var(--text-muted); text-align: right; }
 
     .user-row { display: flex; align-items: center; gap: 10px; padding: 8px; border-radius: 8px; background: #1c1c24; margin-bottom: 5px; }
     .user-row img { width: 30px; height: 30px; border-radius: 4px; }
     .user-row span { font-size: 12px; font-weight: 600; flex: 1; }
     .add-btn { background: var(--primary); color: white; border: none; padding: 4px 8px; border-radius: 4px; font-size: 10px; cursor: pointer; }
 
-    /* --- REST OF YOUR ORIGINAL STYLES --- */
+    /* --- AUTH & PROFILE UI STYLES --- */
     .auth-nav-container {
         position: fixed;
         top: 20px;
@@ -363,8 +365,11 @@
     </div>
 
     <div class="chat-input-area">
-        <input type="text" id="chatInput" placeholder="Type a message...">
-        <button onclick="sendMessage()">Send</button>
+        <div class="input-row">
+            <input type="text" id="chatInput" placeholder="Type a message..." maxlength="30" oninput="updateCharCount()">
+            <button onclick="sendMessage()">Send</button>
+        </div>
+        <div class="char-limit" id="charCount">0/30</div>
     </div>
 </div>
 
@@ -460,7 +465,7 @@
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+    import { getAuth, onAuthStateChanged, signOut, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
     import { getFirestore, doc, getDoc, collection, addDoc, query, orderBy, limit, onSnapshot, serverTimestamp, where, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
     const firebaseConfig = {
@@ -476,6 +481,9 @@
     const auth = getAuth(app);
     const db = getFirestore(app);
 
+    // Auto-Login / Persistence Setup
+    setPersistence(auth, browserLocalPersistence);
+
     const authUi = document.getElementById('auth-ui');
     const userProfile = document.getElementById('user-profile');
     const navUsername = document.getElementById('nav-username');
@@ -486,7 +494,6 @@
     let currentUserID = null;
     let currentUserData = null;
 
-    // Authentication Observer
     onAuthStateChanged(auth, async (user) => {
         if (user) {
             currentUserID = user.uid;
@@ -509,7 +516,6 @@
         }
     });
 
-    // CHAT LOGIC
     window.toggleChat = () => {
         if (!currentUserID) return showToast("Login to chat!");
         const win = document.getElementById('chatWindow');
@@ -523,18 +529,29 @@
         event.currentTarget.classList.add('active');
     };
 
-    window.sendMessage = async () => {
-        const text = document.getElementById('chatInput').value.trim();
-        if (!text || !currentUserID) return;
+    window.updateCharCount = () => {
+        const input = document.getElementById('chatInput');
+        document.getElementById('charCount').innerText = `${input.value.length}/30`;
+    };
 
-        await addDoc(collection(db, "global_chat"), {
-            uid: currentUserID,
-            name: currentUserData.name,
-            pfp: currentUserData.pfp,
-            text: text,
-            timestamp: serverTimestamp()
-        });
-        document.getElementById('chatInput').value = "";
+    window.sendMessage = async () => {
+        const input = document.getElementById('chatInput');
+        const text = input.value.trim();
+        
+        if (!text || !currentUserID) return;
+        if (text.length > 30) return showToast("Limit is 30 characters!");
+
+        try {
+            await addDoc(collection(db, "global_chat"), {
+                uid: currentUserID,
+                name: currentUserData.name,
+                pfp: currentUserData.pfp,
+                text: text,
+                timestamp: serverTimestamp()
+            });
+            input.value = "";
+            updateCharCount();
+        } catch (e) { showToast("Message failed!"); }
     };
 
     function loadMessages() {
@@ -581,7 +598,6 @@
         });
     };
 
-    // Toggle Dropdown
     userProfile.addEventListener('click', (e) => {
         e.stopPropagation();
         profileDropdown.classList.toggle('show');
@@ -594,7 +610,6 @@
         signOut(auth).then(() => { window.location.href = "index.html"; });
     });
 
-    // DRAGGABLE LOGIC
     const chatWin = document.getElementById("chatWindow");
     const chatHeader = document.getElementById("chatHeader");
     let p1 = 0, p2 = 0, p3 = 0, p4 = 0;
