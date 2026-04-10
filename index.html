@@ -22,6 +22,85 @@
         }  * { box-sizing: border-box; margin: 0; padding: 0; }  
     body { font-family: 'Inter', sans-serif; background: var(--bg-dark); color: var(--text-main); display: flex; min-height: 100vh; overflow-x: hidden; }  
 
+    /* --- AUTH & PROFILE UI STYLES --- */
+    .auth-nav-container {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 10001;
+    }
+
+    .profile-badge {
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        background: var(--bg-sidebar);
+        padding: 6px 14px;
+        border-radius: 50px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        cursor: pointer;
+        transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        z-index: 10001;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    .profile-badge:hover {
+        background: var(--bg-card-hover);
+        border-color: var(--primary);
+    }
+
+    .profile-badge img {
+        width: 32px;
+        height: 32px;
+        border-radius: 6px;
+        background: #000;
+        image-rendering: pixelated;
+    }
+
+    .profile-badge .username {
+        font-weight: 800;
+        font-size: 0.85rem;
+        letter-spacing: 0.5px;
+    }
+
+    /* --- ADDED: DROPDOWN STYLES --- */
+    .profile-dropdown {
+        position: absolute;
+        top: calc(100% + 10px);
+        left: 0;
+        background: var(--bg-card);
+        border: 1px solid #333;
+        border-radius: 12px;
+        width: 140px;
+        overflow: hidden;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+        display: none;
+        flex-direction: column;
+    }
+
+    .profile-dropdown.show { display: flex; }
+
+    .dropdown-item {
+        padding: 12px 15px;
+        cursor: pointer;
+        transition: 0.2s;
+        color: #ff4b4b;
+        font-weight: 800;
+        font-size: 0.65rem;
+        text-transform: uppercase;
+        font-family: 'Press Start 2P', cursive;
+        text-align: center;
+    }
+
+    .dropdown-item:hover {
+        background: rgba(255, 75, 75, 0.1);
+    }
+
+    .hidden { display: none !important; }
+
     /* --- MOBILE SITE WARNING --- */  
     #mobile-notice {  
         position: fixed;  
@@ -118,48 +197,46 @@
 
     .mc-icon { width: 20px; height: 20px; image-rendering: pixelated; object-fit: contain; }  
 
-    /* --- UPDATED COMPACT TIERS & TOOLTIP --- */
     .badge-list { display: flex; gap: 2px; overflow: visible; padding-bottom: 2px; align-items: center; }  
-    .badge { 
-        background: rgba(0,0,0,0.6); 
-        padding: 4px 8px; 
-        border-radius: 4px; 
-        display: flex; 
-        align-items: center; 
-        gap: 5px; 
-        border: 1px solid rgba(255,255,255,0.05); 
-        flex-shrink: 0; 
-        position: relative; /* For tooltip positioning */
+    .badge {  
+        background: rgba(0,0,0,0.6);  
+        padding: 4px 8px;  
+        border-radius: 4px;  
+        display: flex;  
+        align-items: center;  
+        gap: 5px;  
+        border: 1px solid rgba(255,255,255,0.05);  
+        flex-shrink: 0;  
+        position: relative;  
     }  
     .b-text { font-family: 'Press Start 2P', cursive; font-size: 0.45rem; }  
 
-    /* Hover Tooltip Logic */
-    .badge::after {
-        content: attr(data-pts);
-        position: absolute;
-        bottom: 125%;
-        left: 50%;
-        transform: translateX(-50%) translateY(5px);
-        background: var(--primary);
-        color: white;
-        padding: 3px 6px;
-        border-radius: 4px;
-        font-size: 0.55rem;
-        font-family: 'Press Start 2P', cursive;
-        opacity: 0;
-        pointer-events: none;
-        transition: 0.2s;
-        z-index: 100;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.5);
-    }
-    .badge:hover::after {
-        opacity: 1;
-        transform: translateX(-50%) translateY(0);
-    }
+    .badge::after {  
+        content: attr(data-pts);  
+        position: absolute;  
+        bottom: 125%;  
+        left: 50%;  
+        transform: translateX(-50%) translateY(5px);  
+        background: var(--primary);  
+        color: white;  
+        padding: 3px 6px;  
+        border-radius: 4px;  
+        font-size: 0.55rem;  
+        font-family: 'Press Start 2P', cursive;  
+        opacity: 0;  
+        pointer-events: none;  
+        transition: 0.2s;  
+        z-index: 100;  
+        box-shadow: 0 4px 10px rgba(0,0,0,0.5);  
+    }  
+    .badge:hover::after {  
+        opacity: 1;  
+        transform: translateX(-50%) translateY(0);  
+    }  
 
     .ht1 { color: var(--tier-ht1); } .ht2 { color: var(--tier-ht2); } .ht3 { color: var(--tier-ht3); }  
     .ht4 { color: var(--tier-ht4); } .ht5 { color: var(--tier-ht5); } .lt3 { color: var(--tier-lt3); } .lt4 { color: var(--tier-lt4); } .lt5 { color: var(--tier-lt5); }  
-    .lt1 { color: #55FF55; } .lt2 { color: #55FFFF; }
+    .lt1 { color: #55FF55; } .lt2 { color: #55FFFF; }  
 
     .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); display: none; align-items: center; justify-content: center; backdrop-filter: blur(8px); z-index: 1000; padding: 20px; }  
     .modal-box { background: var(--bg-card); padding: 30px; border-radius: 20px; width: 100%; max-width: 420px; text-align: center; border: 1px solid #333; position: relative; }  
@@ -188,14 +265,32 @@
         .player-card .badge-list { display: none; }  
         .player-card::after { content: '➔'; color: var(--text-muted); font-size: 0.8rem; margin-left: auto; }  
         .filters { width: 100%; display: flex; justify-content: flex-start; overflow-x: scroll; -webkit-overflow-scrolling: touch; }  
+        .auth-nav-container { top: auto; bottom: 85px; right: 20px; }
+        .profile-badge { top: auto; bottom: 85px; left: 20px; }
     }  
 
     @keyframes fadein { from {bottom: 0; opacity: 0;} to {bottom: 30px; opacity: 1;} }  
     @keyframes fadeout { from {bottom: 30px; opacity: 1;} to {bottom: 0; opacity: 0;} }  
-</style>
+</style>  
 
 </head>  
-<body>  <div id="mobile-notice">  
+<body>  
+
+<div id="auth-ui" class="auth-nav-container hidden">
+    <a href="login.html" class="btn btn-reg">Login</a>
+</div>
+
+<div id="user-profile" class="profile-badge hidden">
+    <img id="nav-pfp" src="" alt="Avatar">
+    <div class="user-info">
+        <span id="nav-username" class="username">...</span>
+    </div>
+    <div id="profile-dropdown" class="profile-dropdown">
+        <div id="logout-btn" class="dropdown-item">Logout</div>
+    </div>
+</div>
+
+<div id="mobile-notice">  
     <h2 style="font-family: 'Press Start 2P', cursive; font-size: 0.8rem; color: var(--primary); margin-bottom: 25px;">SYSTEM NOTICE</h2>  
     <p style="font-weight: 600; line-height: 1.8; color: var(--text-main); margin-bottom: 30px;">  
         For the best competitive experience,<br>  
@@ -227,9 +322,8 @@
             <span class="warning-tag">⚠️ NUMBERING UPDATES ON REGISTER</span>  
             <h1 id="page-title" style="margin-top: 15px;">Global Rankings</h1>  
         </div>  
-        <div class="action-btns">  
-            <button class="btn btn-reg" id="main-action-btn" onclick="showToast('Registration feature in development...')">Register</button>  
-        </div>  
+        <div class="action-btns" id="header-action-container">  
+            </div>  
     </div>  
 
     <div id="rank-view">  
@@ -285,15 +379,77 @@
 </div>  
 
 <div id="toast">Message</div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-auth.js";
+    import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
+
+    // PASTE YOUR CONFIG FROM LOGIN.HTML HERE
+    const firebaseConfig = {
+        apiKey: "AIzaSyDRJ9-AY5oy-oZ8ni5mWEYm2KWn72w1n3s",
+        authDomain: "AIzaSyDRJ9-AY5oy-oZ8ni5mWEYm2KWn72w1n3s",
+        projectId: "aitchison-tier-testing",
+        storageBucket: "aitchison-tier-testing.firebasestorage.app",
+        messagingSenderId: "206635171971",
+        appId: "1:206635171971:web:5c7b4aad54adca55c85bb6"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    const authUi = document.getElementById('auth-ui');
+    const userProfile = document.getElementById('user-profile');
+    const navUsername = document.getElementById('nav-username');
+    const navPfp = document.getElementById('nav-pfp');
+    const profileDropdown = document.getElementById('profile-dropdown');
+    const logoutBtn = document.getElementById('logout-btn');
+
+    // Authentication Observer
+    onAuthStateChanged(auth, async (user) => {
+        if (user) {
+            authUi.classList.add('hidden');
+            userProfile.classList.remove('hidden');
+            try {
+                const docRef = doc(db, "users", user.uid);
+                const docSnap = await getDoc(docRef);
+                if (docSnap.exists()) {
+                    const userData = docSnap.data();
+                    navUsername.innerText = userData.name || "Unknown";
+                    navPfp.src = userData.pfp === "alex" ? "https://mc-heads.net/avatar/Alex" : "https://mc-heads.net/avatar/Steve";
+                }
+            } catch (e) { console.error("Error fetching user data:", e); }
+        } else {
+            userProfile.classList.add('hidden');
+            authUi.classList.remove('hidden');
+        }
+    });
+
+    // Toggle Dropdown
+    userProfile.addEventListener('click', (e) => {
+        e.stopPropagation();
+        profileDropdown.classList.toggle('show');
+    });
+
+    // Close dropdown on outside click
+    window.addEventListener('click', () => {
+        profileDropdown.classList.remove('show');
+    });
+
+    // Logout logic
+    logoutBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        signOut(auth).then(() => {
+            window.location.href = "index.html";
+        }).catch((error) => { console.error("Logout error:", error); });
+    });
+</script>
+
 <script>  
     const mcItems = {  
-        sword: "swordd.png",  
-        axe: "axe.png",  
-        potion: "pot.png",  
-        nethpot: "neth.png",  
-        crystal: "crystal.png",
-        cart: "cart.png",
-        mace: "mace.png"
+        sword: "swordd.png",  axe: "axe.png",  potion: "pot.png",  
+        nethpot: "neth.png",  crystal: "crystal.png", cart: "cart.png", mace: "mace.png"
     };  
       
     const modePattern = ["sword", "axe", "potion", "nethpot", "crystal", "cart", "mace"];
@@ -303,64 +459,13 @@
     };
 
     const players = [  
-        {  
-            name: "x0_Encrypted",  
-            rankTitle: "Iron",  
-            tiers: [  
-                {m: "sword", r: "LT3"}, {m: "axe", r: "LT3"},   
-                {m: "potion", r: "LT3"}, {m: "nethpot", r: "LT3"}, 
-                {m: "crystal", r: "HT4"}, {m: "cart", r: "LT3"},
-                {m: "mace", r: "HT4"}
-            ]  
-        },  
-        {  
-            name: "x0__StableDFNN",  
-            rankTitle: "Stone",  
-            tiers: [  
-                {m: "sword", r: "LT4"}, {m: "axe", r: "LT4"},   
-                {m: "potion", r: "HT5"}, {m: "nethpot", r: "LT4"},
-                {m: "mace", r: "HT5"}
-            ]  
-        },  
-        {  
-            name: "Dr1pzide_",  
-            rankTitle: "Stone",  
-            tiers: [  
-                {m: "sword", r: "LT4"}, {m: "axe", r: "HT5"},   
-                {m: "potion", r: "HT4"}
-            ]  
-        },  
-        {  
-            name: "BladeOP_",  
-            rankTitle: "Wood",  
-            tiers: [  
-                {m: "sword", r: "HT5"}, {m: "axe", r: "HT5"},   
-                {m: "crystal", r: "LT4"}  
-            ]  
-        },
-        {  
-            name: "Zylo_Here",  
-            rankTitle: "Wood",  
-            tiers: [  
-                {m: "crystal", r: "HT5"}, {m: "nethpot", r: "LT5"}  
-            ]  
-        },
-        {  
-            name: "LondonBrandon",  
-            rankTitle: "Wood",  
-            tiers: [  
-                {m: "sword", r: "LT5"}, {m: "crystal", r: "LT5"},   
-                {m: "nethpot", r: "LT5"}, {m: "potion", r: "LT5"}  
-            ]  
-        },
-        {  
-            name: "Talal_xD",  
-            rankTitle: "Wood",  
-            tiers: [  
-                {m: "sword", r: "HT5"}, {m: "axe", r: "LT5"},   
-                {m: "crystal", r: "LT5"}, {m: "nethpot", r: "HT5"}  
-            ]  
-        }  
+        { name: "x0_Encrypted", rankTitle: "Iron", tiers: [ {m: "sword", r: "LT3"}, {m: "axe", r: "LT3"}, {m: "potion", r: "LT3"}, {m: "nethpot", r: "LT3"}, {m: "crystal", r: "HT4"}, {m: "cart", r: "LT3"}, {m: "mace", r: "HT4"} ] },  
+        { name: "x0__StableDFNN", rankTitle: "Stone", tiers: [ {m: "sword", r: "LT4"}, {m: "axe", r: "LT4"}, {m: "potion", r: "HT5"}, {m: "nethpot", r: "LT4"}, {m: "mace", r: "HT5"} ] },  
+        { name: "Dr1pzide_", rankTitle: "Stone", tiers: [ {m: "sword", r: "LT4"}, {m: "axe", r: "HT5"}, {m: "potion", r: "HT4"} ] },  
+        { name: "BladeOP_", rankTitle: "Wood", tiers: [ {m: "sword", r: "HT5"}, {m: "axe", r: "HT5"}, {m: "crystal", r: "LT4"} ] },
+        { name: "Zylo_Here", rankTitle: "Wood", tiers: [ {m: "crystal", r: "HT5"}, {m: "nethpot", r: "LT5"} ] },
+        { name: "LondonBrandon", rankTitle: "Wood", tiers: [ {m: "sword", r: "LT5"}, {m: "crystal", r: "LT5"}, {m: "nethpot", r: "LT5"}, {m: "potion", r: "LT5"} ] },
+        { name: "Talal_xD", rankTitle: "Wood", tiers: [ {m: "sword", r: "HT5"}, {m: "axe", r: "LT5"}, {m: "crystal", r: "LT5"}, {m: "nethpot", r: "HT5"} ] }  
     ];  
 
     function showMemberStats() {  
@@ -378,7 +483,7 @@
         const rankView = document.getElementById('rank-view');  
         const rulesView = document.getElementById('rules-content');  
         const title = document.getElementById('page-title');  
-        const actionBtn = document.getElementById('main-action-btn');  
+        const actionContainer = document.getElementById('header-action-container');  
         const navRank = document.getElementById('nav-rank');  
         const navRules = document.getElementById('nav-rules');  
 
@@ -390,8 +495,7 @@
                 setTimeout(() => rulesView.style.opacity = '1', 10);  
             }, 300);  
             title.innerText = "Official Rules";  
-            actionBtn.innerText = "Back to Rankings";  
-            actionBtn.onclick = () => toggleRules(false);  
+            actionContainer.innerHTML = `<button class="btn btn-reg" onclick="toggleRules(false)">Back to Rankings</button>`;
             navRank.classList.remove('active');  
             navRules.classList.add('active');  
         } else {  
@@ -402,8 +506,7 @@
                 setTimeout(() => rankView.style.opacity = '1', 10);  
             }, 300);  
             title.innerText = "Global Rankings";  
-            actionBtn.innerText = "Register";  
-            actionBtn.onclick = () => showToast('Registration feature in development...');  
+            actionContainer.innerHTML = ''; // Keep empty as registration button is removed
             navRules.classList.remove('active');  
             navRank.classList.add('active');  
         }  
@@ -417,11 +520,7 @@
 
     function createBadge(t) {  
         const pts = tierPoints[t.r] || 0;
-        return `  
-            <div class="badge" data-pts="${pts}">  
-                <img src="${mcItems[t.m] || ''}" class="mc-icon" onerror="this.style.display='none'">  
-                <span class="b-text ${t.r.toLowerCase()}">${t.r}</span>  
-            </div>`;  
+        return `<div class="badge" data-pts="${pts}"><img src="${mcItems[t.m] || ''}" class="mc-icon" onerror="this.style.display='none'"><span class="b-text ${t.r.toLowerCase()}">${t.r}</span></div>`;  
     }  
 
     function filterData(mode, event) {
@@ -433,55 +532,25 @@
     function render(filterMode = 'all') {  
         const list = document.getElementById('leaderboard');  
         list.innerHTML = '';  
-          
         players.forEach(p => {
             p.totalPoints = p.tiers.reduce((sum, t) => sum + (tierPoints[t.r] || 0), 0);
             p.tiers.sort((a, b) => modePattern.indexOf(a.m) - modePattern.indexOf(b.m));
         });
-
         players.sort((a, b) => b.totalPoints - a.totalPoints);
         let filtered = filterMode === 'all' ? players : players.filter(p => p.tiers.some(t => t.m === filterMode));  
         document.getElementById('stat-players').innerText = players.length;
-
         filtered.forEach((p, i) => {  
             const card = document.createElement('div');  
             card.className = 'player-card';  
             const visibleTiers = filterMode === 'all' ? p.tiers : p.tiers.filter(t => t.m === filterMode);  
             const tagClass = `tag-${p.rankTitle.toLowerCase()}`;  
-
             card.onclick = () => {
                 document.getElementById('m-img').src = "https://minotar.net/helm/" + p.name + "/100.png";
-                document.getElementById('m-name-area').innerHTML = `
-                    <span class="name-tag ${tagClass}">${p.rankTitle}</span>
-                    <span style="font-weight: 800; font-size: 1.2rem; vertical-align: middle;">${p.name}</span>
-                    <div style="font-size: 0.8rem; color: var(--accent); margin-top: 8px; font-weight: 700;">${p.totalPoints} POINTS</div>
-                `;
-                document.getElementById('m-rows').innerHTML = `
-                    <div class="badge-list" style="justify-content: center; flex-wrap: wrap;">
-                        ${p.tiers.map(t => createBadge(t)).join('')}
-                    </div>
-                `;
+                document.getElementById('m-name-area').innerHTML = `<span class="name-tag ${tagClass}">${p.rankTitle}</span><span style="font-weight: 800; font-size: 1.2rem; vertical-align: middle;">${p.name}</span><div style="font-size: 0.8rem; color: var(--accent); margin-top: 8px; font-weight: 700;">${p.totalPoints} POINTS</div>`;
+                document.getElementById('m-rows').innerHTML = `<div class="badge-list" style="justify-content: center; flex-wrap: wrap;">${p.tiers.map(t => createBadge(t)).join('')}</div>`;
                 document.getElementById('modal').style.display = 'flex';
             };
-
-            card.innerHTML = `
-                <div class="rank-num">#${i + 1}</div>  
-                <div class="avatar" style="background: url('https://minotar.net/helm/${p.name}/100.png') center/cover; background-color: #000;"></div>  
-                
-                <div style="display: flex; flex-direction: column; flex-grow: 1; overflow: hidden; justify-content: center;">
-                    <div class="p-name-container" style="flex-grow: 0;">  
-                        <span class="name-tag ${tagClass}">${p.rankTitle}</span>  
-                        <span class="p-name">${p.name}</span>  
-                    </div>
-                    <div style="font-size: 0.65rem; color: var(--accent); font-weight: 700; text-transform: uppercase; margin-top: 4px; letter-spacing: 0.5px;">
-                        ${p.totalPoints} Points
-                    </div>
-                </div>
-
-                <div class="badge-list">
-                    ${visibleTiers.map(t => createBadge(t)).join('')}
-                </div>
-            `;
+            card.innerHTML = `<div class="rank-num">#${i + 1}</div><div class="avatar" style="background: url('https://minotar.net/helm/${p.name}/100.png') center/cover; background-color: #000;"></div><div style="display: flex; flex-direction: column; flex-grow: 1; overflow: hidden; justify-content: center;"><div class="p-name-container" style="flex-grow: 0;"><span class="name-tag ${tagClass}">${p.rankTitle}</span><span class="p-name">${p.name}</span></div><div style="font-size: 0.65rem; color: var(--accent); font-weight: 700; text-transform: uppercase; margin-top: 4px; letter-spacing: 0.5px;">${p.totalPoints} Points</div></div><div class="badge-list">${visibleTiers.map(t => createBadge(t)).join('')}</div>`;
             list.appendChild(card);
         });  
     }
