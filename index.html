@@ -507,6 +507,7 @@ body::-webkit-scrollbar {
 	    <button class="filter-btn" onclick="filterData('bow', event)">Bow</button>
             <button class="filter-btn" onclick="filterData('smp', event)">Smp</button>
 	    <button class="filter-btn" onclick="filterData('uhc', event)">UHC</button>
+		<button class="filter-btn" onclick="filterData('diapot', event)">DiaPot</button>
         </div>  
 
         <div class="leaderboard" id="leaderboard"></div>  
@@ -725,10 +726,11 @@ const mcItems = {
     mace: "mace.png",
     bow: "bow.png" ,
     smp: "smp.png",
-    uhc: "uhc.png"
+    uhc: "uhc.png",
+	diapot: "diapot.png"
 }; 
       
-    const modePattern = ["sword", "axe", "potion", "nethpot", "crystal", "cart", "mace", "bow", "uhc", "smp"];
+    const modePattern = ["sword", "axe", "potion", "nethpot", "crystal", "cart", "mace", "bow", "uhc", "smp", "diapot"];
     const tierPoints = {
         "LT5": 1, "HT5": 3, "LT4": 5, "HT4": 8, "LT3": 12,  
         "HT3": 15, "LT2": 20, "HT2": 25, "LT1": 30, "HT1": 35
@@ -786,6 +788,15 @@ const mcItems = {
 	  { m: "nethpot", r: "HT5" }
     ]
   },		
+	{
+    name: "Disbelievable",
+    rankTitle: "Wood",
+    tiers: [
+      { m: "sword", r: "LT4" },
+	  { m: "pot", r: "HT4" },
+	  { m: "diapot", r: HT4 }
+    ]
+  },
 
   {
     name: "ItzzApeluu",
