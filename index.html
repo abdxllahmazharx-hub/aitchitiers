@@ -116,6 +116,34 @@ body::-webkit-scrollbar {
         right: 20px;
         z-index: 10001;
     }
+.nav-key{
+    margin-top: 20px;
+    padding: 10px;
+    background: #16161e;
+    border-radius: 10px;
+    border: 1px solid #222;
+}
+
+.nav-key h4{
+    font-family: 'Press Start 2P', cursive;
+    font-size: 0.6rem;
+    margin-bottom: 10px;
+    color: var(--primary);
+}
+
+.key-item{
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 0;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+.key-item img{
+    width: 18px;
+    height: 18px;
+}
 
     .profile-badge {
         position: fixed;
@@ -419,18 +447,36 @@ body::-webkit-scrollbar {
 
 <button class="floating-chat" onclick="toggleChat()">💬</button>  
 
-<nav>  
-    <div class="nav-logo" onclick="toggleRules(false)">AITCHISON<br>TIERLIST</div>  
+<nav> 
+    <div class="nav-logo" onclick="toggleRules(false)">
+        AITCHISON<br>TIERLIST
+    </div>  
+
     <ul class="nav-links">  
         <li class="nav-item active" id="nav-rank" onclick="toggleRules(false)">🏆 Rankings</li>  
         <li onclick="showToast('Duels in development...')">⚔️ Duels</li>  
         <li class="nav-item" id="nav-rules" onclick="toggleRules(true)">📜 Rules</li>  
         <li onclick="showMemberStats()">👥 Members</li>  
     </ul>  
+
+    <!-- ✅ KEY BOX (correct place) -->
+    <div class="nav-key">
+        <h4>KEY</h4>
+
+        <div class="key-item"><img src="swordd.png"><span>Sword</span></div>
+        <div class="key-item"><img src="axe.png"><span>Axe</span></div>
+        <div class="key-item"><img src="bow.png"><span>Bow</span></div>
+        <div class="key-item"><img src="neth.png"><span>Nethpot</span></div>
+        <div class="key-item"><img src="crystal.png"><span>Crystal</span></div>
+        <div class="key-item"><img src="uhc.png"><span>UHC</span></div>
+    </div>
+
     <div class="nav-footer-btn">  
-        <a href="https://discord.gg/97dqDeSd" target="_blank" class="btn btn-discord">Join Discord</a>  
+        <a href="https://discord.gg/97dqDeSd" target="_blank" class="btn btn-discord">
+            Join Discord
+        </a>  
     </div>  
-</nav>  
+</nav></nav>  
 
 <main>  
     <div class="top-row">  
