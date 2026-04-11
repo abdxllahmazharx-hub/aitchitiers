@@ -455,6 +455,7 @@ body::-webkit-scrollbar {
             <button class="filter-btn" onclick="filterData('nethpot', event)">Nethpot</button>  
             <button class="filter-btn" onclick="filterData('axe', event)">Axe</button>  
 	    <button class="filter-btn" onclick="filterData('bow', event)">Bow</button>
+            <button class="filter-btn" onclick="filterData('smp', event)">Smp</button>
 	    <button class="filter-btn" onclick="filterData('uhc', event)">UHC</button>
         </div>  
 
@@ -673,10 +674,11 @@ const mcItems = {
     cart: "cart.png",
     mace: "mace.png",
     bow: "bow.png" ,
+    smp: "smp.png"
     uhc: "uhc.png"
 }; 
       
-    const modePattern = ["sword", "axe", "potion", "nethpot", "crystal", "cart", "mace", "bow", "uhc"];
+    const modePattern = ["sword", "axe", "potion", "nethpot", "crystal", "cart", "mace", "bow", "uhc", "smp"];
     const tierPoints = {
         "LT5": 1, "HT5": 3, "LT4": 5, "HT4": 8, "LT3": 12,  
         "HT3": 15, "LT2": 20, "HT2": 25, "LT1": 30, "HT1": 35
@@ -721,6 +723,7 @@ const mcItems = {
       { m: "potion", r: "LT5" },
       { m: "nethpot", r: "LT4" },
       { m: "mace", r: "HT5" },
+	  { m: "smp", r: "LT4" } ,
       { m: "uhc", r: "LT4" }
     ]
   },
