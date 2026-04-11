@@ -71,7 +71,25 @@
 .chat-content::-webkit-scrollbar {
     display: none;              /* Chrome/Safari */
 }
-    
+html, body {
+  overflow-y: scroll;   /* still scrolls */
+  scrollbar-width: none; /* Firefox */
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  display: none; /* Chrome, Safari */
+}
+
+/* extra safety for everything */
+*::-webkit-scrollbar {
+  display: none;
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+    display: none;              /* Chrome, Safari */
+}  
     .msg { display: flex; gap: 8px; align-items: flex-start; max-width: 85%; }
     .msg img { width: 24px; height: 24px; border-radius: 4px; image-rendering: pixelated; }
     .msg-body { background: #252530; padding: 8px 12px; border-radius: 10px; font-size: 13px; line-height: 1.4; word-break: break-word; }
