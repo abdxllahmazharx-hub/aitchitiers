@@ -55,7 +55,22 @@
     .tab { flex: 1; padding: 10px; text-align: center; font-size: 11px; cursor: pointer; border-bottom: 2px solid transparent; color: var(--text-muted); }
     .tab.active { color: white; border-bottom-color: var(--primary); background: rgba(92,92,255,0.1); }
 
-    .chat-content { flex: 1; overflow-y: auto; padding: 10px; display: flex; flex-direction: column; gap: 10px; }
+    .chat-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    /* hide scrollbar */
+    scrollbar-width: none;       /* Firefox */
+    -ms-overflow-style: none;    /* IE/Edge old */
+}
+
+.chat-content::-webkit-scrollbar {
+    display: none;              /* Chrome/Safari */
+}
     
     .msg { display: flex; gap: 8px; align-items: flex-start; max-width: 85%; }
     .msg img { width: 24px; height: 24px; border-radius: 4px; image-rendering: pixelated; }
