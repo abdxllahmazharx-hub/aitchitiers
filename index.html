@@ -330,8 +330,65 @@ body::-webkit-scrollbar {
 
     #toast { visibility: hidden; min-width: 250px; background-color: var(--primary); color: #fff; text-align: center; border-radius: 8px; padding: 16px; position: fixed; z-index: 2000; left: 50%; bottom: 30px; transform: translateX(-50%); font-weight: 600; width: 90%; }  
     #toast.show { visibility: visible; animation: fadein 0.5s, fadeout 0.5s 2.5s; }  
+@media (max-width: 768px) {
+  .mobile-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: #121218;
+    display: flex;
+    justify-content: space-around;
+    padding: 10px 0;
+    border-top: 1px solid #333;
+    z-index: 9999;
+  }
 
-    @media (max-width: 768px) {  
+  .mobile-bar button {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 20px;
+  }
+
+  body {
+    padding-bottom: 60px;
+  }
+}
+
+main {
+  padding: 12px;
+}
+
+.header-info h1 {
+  font-size: 1rem;
+}
+
+.stats-overview {
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+.player-card {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.avatar {
+  width: 45px;
+  height: 45px;
+}
+
+.badge-list {
+  flex-wrap: wrap;
+  width: 100%;
+}
+.btn,
+.filter-btn,
+.nav-links li {
+  padding: 12px 14px;
+  font-size: 0.9rem;
+} 
         #mobile-notice { display: flex; }  
         body { flex-direction: column; }  
         nav { width: 100%; height: auto; padding: 1rem; border-right: none; border-bottom: 1px solid #222; flex-direction: row; justify-content: space-between; align-items: center; gap: 1rem; }  
@@ -914,5 +971,11 @@ const mcItems = {
     }
     render('all');
 </script>  
+<div class="mobile-bar">
+  <button onclick="toggleRules(false)">🏆</button>
+  <button onclick="toggleRules(true)">📜</button>
+  <button onclick="toggleChat()">💬</button>
+  <button onclick="document.getElementById('user-profile').click()">👤</button>
+</div>
 </body>  
 </html>
