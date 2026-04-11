@@ -219,7 +219,11 @@ import {
     getFirestore,
     doc,
     setDoc,
-    getDoc
+    getDoc,
+    collection,
+    query,
+    where,
+    getDocs
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -294,19 +298,30 @@ window.selectPFP = (el, type) => {
     selectedPFP = type;
 };
 
-/* SAVE TO FIRESTORE */
 window.saveProfile = async () => {
     const name = document.getElementById("mcname").value.trim();
+    const nameLower = name.toLowerCase();
 
     if (!name) return alert("Please enter your Minecraft username!");
 
     try {
+        // 🔒 CHECK IF USERNAME EXISTS
+        const q = query(collection(db, "users"), where("nameLower", "==", nameLower));
+        const snap = await getDocs(q);
+
+        if (!snap.empty) {
+            return alert("Username already taken!");
+        }
+
+        // ✅ SAVE USER
         await setDoc(doc(db, "users", currentUser.uid), {
             name: name,
+            nameLower: nameLower,
             pfp: selectedPFP
         });
 
         window.location.href = "index.html";
+
     } catch (e) {
         alert("Error saving profile: " + e.message);
     }
