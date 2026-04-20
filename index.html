@@ -389,6 +389,34 @@ body::-webkit-scrollbar {
 
     @keyframes fadein { from {bottom: 0; opacity: 0;} to {bottom: 30px; opacity: 1;} }  
     @keyframes fadeout { from {bottom: 30px; opacity: 1;} to {bottom: 0; opacity: 0;} }  
+.search-result {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    background: linear-gradient(135deg, #1c1c24, #20202a);
+    padding: 12px;
+    border-radius: 10px;
+    margin-bottom: 8px;
+    cursor: pointer;
+    border: 1px solid #222;
+    transition: 0.2s ease;
+}
+.search-result:hover {
+    background: #252530;
+    border-color: var(--primary);
+    transform: translateY(-2px);
+}
+
+.search-name {
+    font-weight: 800;
+    font-size: 0.95rem;
+}
+
+.search-tiers {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+}
 </style>  
 
 </head>  
@@ -515,7 +543,10 @@ body::-webkit-scrollbar {
 	    <button class="filter-btn" onclick="filterData('uhc', event)">UHC</button>
 		<button class="filter-btn" onclick="filterData('diapot', event)">DiaPot</button>
         </div>  
+<input id="playerSearch" placeholder="Search player..." oninput="searchPlayers()" 
+style="width:100%;padding:10px;border-radius:8px;border:none;background:#16161e;color:white;margin-bottom:10px;">
 
+<div id="searchBox"></div>
         <div class="leaderboard" id="leaderboard"></div>  
     </div>  
 
@@ -1231,6 +1262,36 @@ const mcItems = {
         });  
     }
     render('all');
+function searchPlayers() {
+    const term = document.getElementById("playerSearch").value.toLowerCase();
+    const box = document.getElementById("searchBox");
+    box.innerHTML = "";
+
+    if (term.length < 1) return;
+
+    players
+        .filter(p => p.name.toLowerCase().includes(term))
+        .slice(0, 5)
+        .forEach(p => {
+            const div = document.createElement("div");
+            div.className = "search-result";
+
+div.innerHTML = `
+    <div class="search-name">${p.name}</div>
+    <div class="search-tiers">
+        ${p.tiers.map(t => createBadge(t)).join("")}
+    </div>
+`;
+            div.onclick = () => {
+                document.getElementById('m-img').src = "https://minotar.net/helm/" + p.name + "/100.png";
+                document.getElementById('m-name-area').innerHTML = p.name;
+                document.getElementById('m-rows').innerHTML = `<div class="badge-list">${p.tiers.map(t => createBadge(t)).join('')}</div>`;
+                document.getElementById('modal').style.display = 'flex';
+            };
+
+            box.appendChild(div);
+        });
+}
 </script>  
 </body>  
 </html>
