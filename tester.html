@@ -1,14 +1,13 @@
-```html
+html id="gvt7nb"
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <title>Tester Panel</title>
-
 <style>
 body{
     margin:0;
-    font-family: 'Inter', sans-serif;
+    font-family:Arial,sans-serif;
     background:#0b0b0f;
     color:white;
     display:flex;
@@ -17,185 +16,222 @@ body{
     height:100vh;
 }
 
-/* CARD */
 .card{
     background:#1c1c24;
     padding:30px;
-    border-radius:15px;
-    width:350px;
-    text-align:center;
-    box-shadow:0 10px 30px rgba(0,0,0,0.5);
+    border-radius:18px;
+    width:380px;
+    box-shadow:0 15px 40px rgba(0,0,0,0.5);
 }
 
-/* INPUT */
-input, select{
+input,select,button{
     width:100%;
     padding:12px;
     margin-top:10px;
     border:none;
-    border-radius:8px;
+    border-radius:10px;
+    box-sizing:border-box;
+}
+
+input,select{
     background:#2a2a35;
     color:white;
 }
 
-/* BUTTON */
 button{
-    width:100%;
-    padding:12px;
-    margin-top:15px;
-    border:none;
-    border-radius:8px;
     background:#5c5cff;
     color:white;
     font-weight:bold;
     cursor:pointer;
 }
+
 button:hover{opacity:0.9}
 
-.options{display:none;flex-direction:column;gap:10px}
+.hidden{display:none}
 
-/* POPUP */
-.popup{
-    position:fixed;
-    top:0;left:0;
-    width:100%;height:100%;
-    background:rgba(0,0,0,0.9);
-    display:none;
-    justify-content:center;
-    align-items:center;
-}
-
-.popup-box{
-    background:#1c1c24;
-    padding:25px;
+.mode-box{
+    background:#15151c;
+    padding:12px;
     border-radius:12px;
-    width:320px;
+    margin-top:10px;
 }
 
-.success{margin-top:10px;color:#00ff99}
+.plus-btn{
+    background:#333;
+}
+
+/* TOAST */
+.toast{
+    position:fixed;
+    right:20px;
+    bottom:20px;
+    padding:14px 18px;
+    border-radius:10px;
+    color:white;
+    font-weight:bold;
+    transform:translateX(120%);
+    transition:0.35s;
+}
+
+.toast.show{
+    transform:translateX(0);
+}
+
+.toast.red{background:#ff4444}
+.toast.green{background:#22c55e}
 </style>
 </head>
-
 <body>
 
-<!-- LOGIN -->
-<div class="card" id="loginBox">
+<div class="card" id="loginCard">
     <h2>Tester Login</h2>
-    <input id="pin" placeholder="Enter 4-digit PIN" maxlength="4">
+    <input id="pin" maxlength="4" placeholder="Enter 4-digit PIN">
     <button onclick="login()">Login</button>
 </div>
 
-<!-- PANEL -->
-<div class="card options" id="panel">
-    <h2>Tester Panel</h2>
-    <button onclick="openUpload()">Upload Result</button>
+<div class="card hidden" id="panelCard">
+    <h2>Upload Result</h2>
+
+    <input id="ign" placeholder="IGN">
+
+    <div id="modeContainer"></div>
+
+    <button class="plus-btn" onclick="addGamemode()">+ Add Gamemode</button>
+    <button onclick="submitAll()">Submit All</button>
 </div>
 
-<!-- POPUP -->
-<div class="popup" id="popup">
-    <div class="popup-box">
-        <h3>Upload Result</h3>
-
-        <input id="ign" placeholder="IGN">
-
-        <select id="mode">
-            <option value="sword">Sword</option>
-            <option value="axe">Axe</option>
-            <option value="nethpot">Nethpot</option>
-            <option value="crystal">Crystal</option>
-            <option value="uhc">UHC</option>
-        </select>
-
-        <select id="tier">
-            <option>HT1</option><option>HT2</option><option>HT3</option>
-            <option>HT4</option><option>HT5</option>
-            <option>LT1</option><option>LT2</option><option>LT3</option>
-            <option>LT4</option><option>LT5</option>
-        </select>
-
-        <button onclick="submitData()">Submit</button>
-        <button onclick="closePopup()" style="background:#444;">Cancel</button>
-
-        <div class="success" id="msg"></div>
-    </div>
-</div>
+<div class="toast" id="toast"></div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import {
+    getFirestore,
+    collection,
+    addDoc,
+    serverTimestamp
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-/* 🔥 YOUR FIREBASE */
 const firebaseConfig = {
     apiKey: "AIzaSyDRJ9-AY5oy-oZ8ni5mWEYm2KWn72w1n3s",
     authDomain: "aitchison-tier-testing.firebaseapp.com",
-    projectId: "aitchison-tier-testing",
+    projectId: "aitchison-tier-testing"
 };
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-/* PIN */
 const PIN = "1234";
 
-/* LOGIN */
+function showToast(msg,color){
+    const toast = document.getElementById("toast");
+    toast.className = "toast " + color + " show";
+    toast.innerText = msg;
+
+    setTimeout(()=>{
+        toast.className = "toast";
+    },2500);
+}
+
 window.login = () => {
-    if(document.getElementById("pin").value === PIN){
-        document.getElementById("loginBox").style.display="none";
-        document.getElementById("panel").style.display="flex";
-    }else alert("Wrong PIN");
+    const pin = document.getElementById("pin").value;
+
+    if(pin === PIN){
+        showToast("Login Successful","green");
+        document.getElementById("loginCard").classList.add("hidden");
+        document.getElementById("panelCard").classList.remove("hidden");
+        addGamemode();
+    }else{
+        showToast("Password Incorrect","red");
+    }
 };
 
-/* POPUP */
-window.openUpload = () => {
-    document.getElementById("popup").style.display="flex";
-};
-window.closePopup = () => {
-    document.getElementById("popup").style.display="none";
+window.addGamemode = () => {
+    const box = document.createElement("div");
+    box.className = "mode-box";
+
+    box.innerHTML = `
+        <select class="mode">
+            <option value="sword">Sword</option>
+            <option value="axe">Axe</option>
+            <option value="nethpot">Nethpot</option>
+            <option value="crystal">Crystal</option>
+            <option value="uhc">UHC</option>
+            <option value="smp">SMP</option>
+            <option value="diapot">DiaPot</option>
+        </select>
+
+        <select class="tier">
+            <option>HT1</option>
+            <option>HT2</option>
+            <option>HT3</option>
+            <option>HT4</option>
+            <option>HT5</option>
+            <option>LT1</option>
+            <option>LT2</option>
+            <option>LT3</option>
+            <option>LT4</option>
+            <option>LT5</option>
+        </select>
+    `;
+
+    document.getElementById("modeContainer").appendChild(box);
 };
 
-/* POINTS */
 const tierPoints = {
     "LT5":1,"HT5":3,"LT4":5,"HT4":8,"LT3":12,
     "HT3":15,"LT2":20,"HT2":25,"LT1":30,"HT1":35
 };
 
-/* AUTO RANK */
-function getRank(points){
-    if(points >= 80) return "Iron";
-    if(points >= 40) return "Stone";
+function getRank(total){
+    if(total >= 80) return "Iron";
+    if(total >= 40) return "Stone";
     return "Wood";
 }
 
-/* SUBMIT */
-window.submitData = async () => {
+window.submitAll = async () => {
     const ign = document.getElementById("ign").value.trim();
-    const mode = document.getElementById("mode").value;
-    const tier = document.getElementById("tier").value;
+    if(!ign) return showToast("Enter IGN","red");
 
-    if(!ign) return alert("Enter IGN");
+    const modes = document.querySelectorAll(".mode");
+    const tiers = document.querySelectorAll(".tier");
 
-    const points = tierPoints[tier];
-    const rank = getRank(points);
+    let totalPoints = 0;
+    let allData = [];
+
+    for(let i=0;i<modes.length;i++){
+        const mode = modes[i].value;
+        const tier = tiers[i].value;
+        const points = tierPoints[tier];
+
+        totalPoints += points;
+
+        allData.push({
+            ign,
+            mode,
+            tier,
+            points
+        });
+    }
+
+    const rank = getRank(totalPoints);
 
     try{
-        await addDoc(collection(db,"submissions"),{
-            ign: ign,
-            mode: mode,
-            tier: tier,
-            points: points,
-            rank: rank,
-            time: serverTimestamp()
-        });
+        for(const entry of allData){
+            await addDoc(collection(db,"submissions"),{
+                ...entry,
+                rank,
+                totalPoints,
+                time: serverTimestamp()
+            });
+        }
 
-        document.getElementById("msg").innerText =
-            "Saved ✔ Rank: " + rank;
+        showToast("Saved Successfully","green");
 
     }catch(e){
-        alert("Error: "+e.message);
+        showToast("Save Failed","red");
     }
 };
 </script>
 
 </body>
 </html>
-```
