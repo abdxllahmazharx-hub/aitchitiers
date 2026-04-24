@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,252 +6,196 @@
 <title>Tester Panel</title>
 
 <style>
-* { box-sizing: border-box; }
-
-body {
-    margin: 0;
-    font-family: 'Segoe UI', sans-serif;
-    background: radial-gradient(circle at top, #1a1a1a, #0a0a0a);
-    color: white;
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+body{
+    margin:0;
+    font-family: 'Inter', sans-serif;
+    background:#0b0b0f;
+    color:white;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
 }
 
-/* Glass card */
-.card {
-    backdrop-filter: blur(20px);
-    background: rgba(255,255,255,0.05);
-    border-radius: 25px;
-    padding: 30px;
-    width: 340px;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.6);
-    animation: fadeIn 0.6s ease;
+/* CARD */
+.card{
+    background:#1c1c24;
+    padding:30px;
+    border-radius:15px;
+    width:350px;
+    text-align:center;
+    box-shadow:0 10px 30px rgba(0,0,0,0.5);
 }
 
-h2 { text-align: center; margin-bottom: 20px; }
-
-input, select {
-    width: 100%;
-    padding: 12px;
-    margin: 10px 0;
-    border-radius: 15px;
-    border: none;
-    outline: none;
-    background: rgba(255,255,255,0.08);
-    color: white;
-    transition: 0.2s;
+/* INPUT */
+input, select{
+    width:100%;
+    padding:12px;
+    margin-top:10px;
+    border:none;
+    border-radius:8px;
+    background:#2a2a35;
+    color:white;
 }
 
-input:focus, select:focus {
-    background: rgba(255,255,255,0.15);
+/* BUTTON */
+button{
+    width:100%;
+    padding:12px;
+    margin-top:15px;
+    border:none;
+    border-radius:8px;
+    background:#5c5cff;
+    color:white;
+    font-weight:bold;
+    cursor:pointer;
+}
+button:hover{opacity:0.9}
+
+.options{display:none;flex-direction:column;gap:10px}
+
+/* POPUP */
+.popup{
+    position:fixed;
+    top:0;left:0;
+    width:100%;height:100%;
+    background:rgba(0,0,0,0.9);
+    display:none;
+    justify-content:center;
+    align-items:center;
 }
 
-button {
-    width: 100%;
-    padding: 12px;
-    margin-top: 15px;
-    border-radius: 20px;
-    border: none;
-    background: linear-gradient(135deg, #6a5cff, #9b7bff);
-    color: white;
-    font-weight: bold;
-    cursor: pointer;
-    transition: 0.3s;
+.popup-box{
+    background:#1c1c24;
+    padding:25px;
+    border-radius:12px;
+    width:320px;
 }
 
-button:hover { transform: scale(1.05); }
-
-.result {
-    margin-top: 12px;
-    text-align: center;
-    font-size: 13px;
-    opacity: 0.7;
-}
-
-/* Popup */
-.popup {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.6);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    animation: fadeIn 0.4s;
-}
-
-.popup-box {
-    background: #111;
-    padding: 30px;
-    border-radius: 25px;
-    width: 280px;
-    text-align: center;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.7);
-    animation: pop 0.4s ease;
-}
-
-.popup input {
-    text-align: center;
-    letter-spacing: 6px;
-    font-size: 18px;
-}
-
-/* Toast */
-.toast {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    padding: 14px 20px;
-    border-radius: 20px;
-    color: white;
-    font-size: 14px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-    opacity: 0;
-    transform: translateY(20px);
-    transition: 0.4s;
-}
-
-.toast.show {
-    opacity: 1;
-    transform: translateY(0);
-}
-
-.toast.success { background: #2ecc71; }
-.toast.error { background: #e74c3c; }
-
-/* Animations */
-@keyframes fadeIn {
-    from {opacity:0;}
-    to {opacity:1;}
-}
-
-@keyframes pop {
-    from {transform: scale(0.8); opacity:0;}
-    to {transform: scale(1); opacity:1;}
-}
+.success{margin-top:10px;color:#00ff99}
 </style>
 </head>
 
 <body>
 
-<!-- TOAST -->
-<div id="toast" class="toast"></div>
+<!-- LOGIN -->
+<div class="card" id="loginBox">
+    <h2>Tester Login</h2>
+    <input id="pin" placeholder="Enter 4-digit PIN" maxlength="4">
+    <button onclick="login()">Login</button>
+</div>
 
-<!-- LOGIN POPUP -->
-<div class="popup" id="loginPopup">
+<!-- PANEL -->
+<div class="card options" id="panel">
+    <h2>Tester Panel</h2>
+    <button onclick="openUpload()">Upload Result</button>
+</div>
+
+<!-- POPUP -->
+<div class="popup" id="popup">
     <div class="popup-box">
-        <h3>Enter PIN</h3>
-        <input type="password" id="pin" maxlength="6" placeholder="••••••">
-        <button onclick="checkPin()">Login</button>
+        <h3>Upload Result</h3>
+
+        <input id="ign" placeholder="IGN">
+
+        <select id="mode">
+            <option value="sword">Sword</option>
+            <option value="axe">Axe</option>
+            <option value="nethpot">Nethpot</option>
+            <option value="crystal">Crystal</option>
+            <option value="uhc">UHC</option>
+        </select>
+
+        <select id="tier">
+            <option>HT1</option><option>HT2</option><option>HT3</option>
+            <option>HT4</option><option>HT5</option>
+            <option>LT1</option><option>LT2</option><option>LT3</option>
+            <option>LT4</option><option>LT5</option>
+        </select>
+
+        <button onclick="submitData()">Submit</button>
+        <button onclick="closePopup()" style="background:#444;">Cancel</button>
+
+        <div class="success" id="msg"></div>
     </div>
 </div>
 
-<!-- MAIN UI -->
-<div class="card" id="mainUI" style="display:none;">
-    <h2>Tester Panel</h2>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-    <input type="text" id="ign" placeholder="IGN">
-
-    <select id="tier">
-        <option>LT5</option><option>HT5</option>
-        <option>LT4</option><option>HT4</option>
-        <option>LT3</option><option>HT3</option>
-        <option>LT2</option><option>HT2</option>
-        <option>LT1</option><option>HT1</option>
-    </select>
-
-    <select id="mode">
-        <option value="sword">Sword</option>
-        <option value="axe">Axe</option>
-        <option value="potion">Potion</option>
-        <option value="nethpot">NetherPot</option>
-        <option value="crystal">Crystal</option>
-        <option value="mace">Mace</option>
-        <option value="bow">Bow</option>
-        <option value="uhc">UHC</option>
-        <option value="smp">SMP</option>
-        <option value="diapot">DiaPot</option>
-    </select>
-
-    <button onclick="submitTier()">Submit</button>
-    <div class="result" id="result"></div>
-</div>
-
-<script>
-// -------- CONFIG --------
-const PIN = "119806";
-
-const tierPoints = {
-    "LT5": 1, "HT5": 3, "LT4": 5, "HT4": 8,
-    "LT3": 12, "HT3": 15, "LT2": 20, "HT2": 25,
-    "LT1": 30, "HT1": 35
+/* 🔥 YOUR FIREBASE */
+const firebaseConfig = {
+    apiKey: "AIzaSyDRJ9-AY5oy-oZ8ni5mWEYm2KWn72w1n3s",
+    authDomain: "aitchison-tier-testing.firebaseapp.com",
+    projectId: "aitchison-tier-testing",
 };
 
-let players = [];
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
-// -------- TOAST FUNCTION --------
-function showToast(message, type) {
-    const toast = document.getElementById("toast");
-    toast.innerText = message;
-    toast.className = "toast show " + type;
+/* PIN */
+const PIN = "1234";
 
-    setTimeout(() => {
-        toast.classList.remove("show");
-    }, 2500);
+/* LOGIN */
+window.login = () => {
+    if(document.getElementById("pin").value === PIN){
+        document.getElementById("loginBox").style.display="none";
+        document.getElementById("panel").style.display="flex";
+    }else alert("Wrong PIN");
+};
+
+/* POPUP */
+window.openUpload = () => {
+    document.getElementById("popup").style.display="flex";
+};
+window.closePopup = () => {
+    document.getElementById("popup").style.display="none";
+};
+
+/* POINTS */
+const tierPoints = {
+    "LT5":1,"HT5":3,"LT4":5,"HT4":8,"LT3":12,
+    "HT3":15,"LT2":20,"HT2":25,"LT1":30,"HT1":35
+};
+
+/* AUTO RANK */
+function getRank(points){
+    if(points >= 80) return "Iron";
+    if(points >= 40) return "Stone";
+    return "Wood";
 }
 
-// -------- LOGIN --------
-function checkPin() {
-    const input = document.getElementById("pin").value;
-
-    if (input === PIN) {
-        showToast("Logged In Successfully", "success");
-
-        setTimeout(() => {
-            document.getElementById("loginPopup").style.display = "none";
-            document.getElementById("mainUI").style.display = "block";
-        }, 500);
-
-    } else {
-        showToast("Password Incorrect", "error");
-    }
-}
-
-// -------- SUBMIT --------
-function submitTier() {
+/* SUBMIT */
+window.submitData = async () => {
     const ign = document.getElementById("ign").value.trim();
-    const tier = document.getElementById("tier").value;
     const mode = document.getElementById("mode").value;
+    const tier = document.getElementById("tier").value;
 
-    if (!ign) return;
+    if(!ign) return alert("Enter IGN");
 
-    let player = players.find(p => p.name.toLowerCase() === ign.toLowerCase());
+    const points = tierPoints[tier];
+    const rank = getRank(points);
 
-    if (!player) {
-        player = { name: ign, rankTitle: "Wood", tiers: [] };
-        players.push(player);
+    try{
+        await addDoc(collection(db,"submissions"),{
+            ign: ign,
+            mode: mode,
+            tier: tier,
+            points: points,
+            rank: rank,
+            time: serverTimestamp()
+        });
+
+        document.getElementById("msg").innerText =
+            "Saved ✔ Rank: " + rank;
+
+    }catch(e){
+        alert("Error: "+e.message);
     }
-
-    let existing = player.tiers.find(t => t.m === mode);
-
-    if (existing) {
-        existing.r = tier;
-    } else {
-        player.tiers.push({ m: mode, r: tier });
-    }
-
-    document.getElementById("result").innerText =
-        `${ign} → ${mode} = ${tier} (${tierPoints[tier]} pts)`;
-
-    showToast("Saved Successfully", "success");
-
-    // -------- FIREBASE PLACEHOLDER --------
-    /*
-    // put your firebase here later
-    */
-}
+};
 </script>
 
 </body>
 </html>
+```
