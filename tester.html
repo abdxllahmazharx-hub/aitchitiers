@@ -3,7 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <title>Tester Panel</title>
-
 <style>
 body{
     margin:0;
@@ -16,35 +15,14 @@ body{
     height:100vh;
 }
 
-/* CARD */
 .card{
-    background:rgba(28,28,36,0.9);
-    backdrop-filter: blur(10px);
+    background:#1c1c24;
     padding:30px;
     border-radius:18px;
-    width:400px;
-    box-shadow:0 20px 50px rgba(0,0,0,0.6);
-    position:relative;
+    width:380px;
+    box-shadow:0 15px 40px rgba(0,0,0,0.5);
 }
 
-/* PING DOT */
-.ping{
-    position:absolute;
-    top:15px;
-    right:15px;
-    width:12px;
-    height:12px;
-    border-radius:50%;
-    background:red;
-    box-shadow:0 0 10px red;
-}
-
-.ping.online{
-    background:#22c55e;
-    box-shadow:0 0 10px #22c55e;
-}
-
-/* INPUTS */
 input,select,button{
     width:100%;
     padding:12px;
@@ -59,40 +37,26 @@ input,select{
     color:white;
 }
 
-/* BUTTON */
 button{
     background:#5c5cff;
     color:white;
     font-weight:bold;
     cursor:pointer;
-    transition:0.2s;
-}
-button:hover{
-    transform:translateY(-1px);
-    opacity:0.9;
 }
 
-.plus-btn{
-    background:#333;
-}
+button:hover{opacity:0.9}
 
-/* MODE BOX */
+.hidden{display:none}
+
 .mode-box{
     background:#15151c;
     padding:12px;
     border-radius:12px;
     margin-top:10px;
-    position:relative;
 }
 
-/* REMOVE BTN */
-.remove{
-    position:absolute;
-    top:5px;
-    right:8px;
-    cursor:pointer;
-    color:#ff4444;
-    font-weight:bold;
+.plus-btn{
+    background:#333;
 }
 
 /* TOAST */
@@ -114,22 +78,31 @@ button:hover{
 
 .toast.red{background:#ff4444}
 .toast.green{background:#22c55e}
+
+/* 🔵 PING DOT */
+#pingDot{
+    position:fixed;
+    top:20px;
+    left:20px;
+    width:12px;
+    height:12px;
+    border-radius:50%;
+    background:#22c55e;
+    box-shadow:0 0 10px #22c55e;
+}
 </style>
 </head>
-
 <body>
 
-<div class="card" id="loginCard">
-    <div class="ping" id="ping"></div>
+<div id="pingDot"></div>
 
+<div class="card" id="loginCard">
     <h2>Tester Login</h2>
     <input id="pin" maxlength="4" placeholder="Enter 4-digit PIN">
     <button onclick="login()">Login</button>
 </div>
 
 <div class="card hidden" id="panelCard">
-    <div class="ping" id="ping2"></div>
-
     <h2>Upload Result</h2>
 
     <input id="ign" placeholder="IGN">
@@ -148,8 +121,7 @@ import {
     getFirestore,
     collection,
     addDoc,
-    serverTimestamp,
-    onSnapshot
+    serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -161,23 +133,16 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-/* 🔵 PING SYSTEM */
-const ping = document.getElementById("ping");
-const ping2 = document.getElementById("ping2");
-
-onSnapshot(collection(db,"submissions"), ()=>{
-    ping.classList.add("online");
-    ping2.classList.add("online");
-});
-
-/* LOGIN */
-const PIN = "11980";
+const PIN = "1234";
 
 function showToast(msg,color){
-    const t = document.getElementById("toast");
-    t.className = "toast " + color + " show";
-    t.innerText = msg;
-    setTimeout(()=>t.className="toast",2500);
+    const toast = document.getElementById("toast");
+    toast.className = "toast " + color + " show";
+    toast.innerText = msg;
+
+    setTimeout(()=>{
+        toast.className = "toast";
+    },2500);
 }
 
 window.login = () => {
@@ -185,22 +150,19 @@ window.login = () => {
 
     if(pin === PIN){
         showToast("Login Successful","green");
-        loginCard.classList.add("hidden");
-        panelCard.classList.remove("hidden");
+        document.getElementById("loginCard").classList.add("hidden");
+        document.getElementById("panelCard").classList.remove("hidden");
         addGamemode();
     }else{
         showToast("Password Incorrect","red");
     }
 };
 
-/* ADD MODE */
 window.addGamemode = () => {
     const box = document.createElement("div");
     box.className = "mode-box";
 
     box.innerHTML = `
-        <div class="remove" onclick="this.parentElement.remove()">✖</div>
-
         <select class="mode">
             <option value="sword">Sword</option>
             <option value="axe">Axe</option>
@@ -228,7 +190,6 @@ window.addGamemode = () => {
     document.getElementById("modeContainer").appendChild(box);
 };
 
-/* POINTS */
 const tierPoints = {
     "LT5":1,"HT5":3,"LT4":5,"HT4":8,"LT3":12,
     "HT3":15,"LT2":20,"HT2":25,"LT1":30,"HT1":35
@@ -240,7 +201,6 @@ function getRank(total){
     return "Wood";
 }
 
-/* SUBMIT */
 window.submitAll = async () => {
     const ign = document.getElementById("ign").value.trim();
     if(!ign) return showToast("Enter IGN","red");
@@ -248,41 +208,60 @@ window.submitAll = async () => {
     const modes = document.querySelectorAll(".mode");
     const tiers = document.querySelectorAll(".tier");
 
-    let usedModes = {};
     let totalPoints = 0;
+    let allData = [];
+
+    for(let i=0;i<modes.length;i++){
+        const mode = modes[i].value;
+        const tier = tiers[i].value;
+        const points = tierPoints[tier];
+
+        totalPoints += points;
+
+        allData.push({
+            ign,
+            mode,
+            tier,
+            points
+        });
+    }
+
+    const rank = getRank(totalPoints);
 
     try{
-        for(let i=0;i<modes.length;i++){
-            const mode = modes[i].value;
-            const tier = tiers[i].value;
-
-            if(usedModes[mode]) continue; // prevent duplicates
-            usedModes[mode] = true;
-
-            const points = tierPoints[tier];
-            totalPoints += points;
-
+        for(const entry of allData){
             await addDoc(collection(db,"submissions"),{
-                ign,
-                mode,
-                tier,
-                points,
+                ...entry,
+                rank,
                 totalPoints,
-                rank: getRank(totalPoints),
                 time: serverTimestamp()
             });
         }
 
-        showToast("Saved + Synced","green");
-
-        document.getElementById("modeContainer").innerHTML="";
-        document.getElementById("ign").value="";
-        addGamemode();
+        showToast("Saved Successfully","green");
 
     }catch(e){
         showToast("Save Failed","red");
     }
 };
+</script>
+
+<script>
+/* 🔵 LIVE PING DOT */
+const pingDot = document.getElementById("pingDot");
+
+function updatePing(){
+    if(navigator.onLine){
+        pingDot.style.background = "#22c55e";
+        pingDot.style.boxShadow = "0 0 10px #22c55e";
+    }else{
+        pingDot.style.background = "#ff4444";
+        pingDot.style.boxShadow = "0 0 10px #ff4444";
+    }
+}
+
+setInterval(updatePing, 1000);
+updatePing();
 </script>
 
 </body>
