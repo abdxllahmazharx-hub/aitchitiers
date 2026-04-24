@@ -781,420 +781,13 @@ const mcItems = {
 }; 
       
     const modePattern = ["sword", "axe", "potion", "nethpot", "crystal", "cart", "mace", "bow", "uhc", "smp", "diapot"];
+    let players = [];    
     const tierPoints = {
         "LT5": 1, "HT5": 3, "LT4": 5, "HT4": 8, "LT3": 12,  
         "HT3": 15, "LT2": 20, "HT2": 25, "LT1": 30, "HT1": 35
     };
 
-    const players = [
-  {
-    name: "x0_Encrypted",
-    rankTitle: "Iron",
-    tiers: [
-      { m: "sword", r: "HT3" },
-      { m: "axe", r: "LT3" },
-      { m: "potion", r: "HT3" },
-      { m: "nethpot", r: "HT3" },
-      { m: "crystal", r: "HT4" },
-      { m: "mace", r: "HT4" },
-      { m: "smp", r: "LT3" },
-	  { m: "uhc", r: "HT4" }
-    ]
-  },
-
-  {
-    name: "ClearVision_",
-    rankTitle: "Iron",
-    tiers: [
-      { m: "sword", r: "LT2" },
-      { m: "axe", r: "LT3" },
-      { m: "potion", r: "HT3" },
-      { m: "nethpot", r: "LT3" },
-      { m: "mace", r: "HT4" },
-      { m: "crystal", r: "LT3" },
-      { m: "uhc", r: "HT4" }
-    ]
-  },
-{
-    name: "Coolixee",
-    rankTitle: "Stone",
-    tiers: [
-      { m: "sword", r: "LT4" },
-      { m: "axe", r: "HT5" },
-      { m: "potion", r: "LT5" },
-      { m: "nethpot", r: "LT4" },
-      { m: "mace", r: "HT5" },
-	  { m: "smp", r: "LT4" } ,
-      { m: "uhc", r: "LT4" }
-    ]
-  },
-{
-    name: "DarkLegend0",
-    rankTitle: "Wood",
-    tiers: [
-      { m: "sword", r: "LT4" },
-	  { m: "nethpot", r: "HT5" },
-	  { m: "mace", r: "HT5" },
-	  { m: "crystal", r: "LT5" }
-    ]
-  },
-
-{
-    name: "Usman192",
-    rankTitle: "Stone",
-    tiers: [
-      { m: "sword", r: "LT3" },
-	  { m: "nethpot", r: "HT4" }
-    ]
-  },
-{
-    name: "NoxAhmed",
-    rankTitle: "Wood",
-    tiers: [
-      { m: "sword", r: "HT5" },
-	  { m: "mace", r: "LT5" }
-    ]
-  },
-	{
-    name: "krvze",
-    rankTitle: "Wood",
-    tiers: [
-      { m: "sword", r: "HT4" }
-    ]
-  },
-			{
-    name: "Executioner512",
-    rankTitle: "Wood",
-    tiers: [
-      { m: "sword", r: "HT4" }
-    ]
-  },
-	{
-    name: "MAD_ALVlNPIE",
-    rankTitle: "Wood",
-    tiers: [
-      { m: "sword", r: "LT4" }
-    ]
-  },
-		{
-    name: "TGKFlex",
-    rankTitle: "Wood",
-    tiers: [
-      { m: "sword", r: "LT4" }
-    ]
-  },
-	{
-    name: "innedtobegood",
-    rankTitle: "Wood",
-    tiers: [
-      { m: "sword", r: "LT4" }
-    ]
-  },
-	{
-    name: "ZHGAMERZ47",
-    rankTitle: "Wood",
-    tiers: [
-      { m: "sword", r: "LT3" },
-	  { m: "potion", r: "HT4" }
-    ]
-  },
-{
-    name: "abdulrehman297",
-    rankTitle: "Wood",
-    tiers: [
-      { m: "sword", r: "LT4" },
-	  { m: "axe", r: "LT4" }
-    ]
-  },		
-{
-    name: "carder_",
-    rankTitle: "Wood",
-    tiers: [
-      { m: "sword", r: "HT4" },
-	  { m: "crystal", r: "HT5" }
-    ]
-  },
-	{
-    name: "Disbelievable",
-    rankTitle: "Stone",
-    tiers: [
-      { m: "sword", r: "LT4" },
-	  { m: "potion", r: "HT4" },
-	  { m: "diapot", r: "HT4" }
-    ]
-  },
-
-  {
-    name: "ItzzApeluu",
-    rankTitle: "Stone",
-    tiers: [
-      { m: "sword", r: "LT4" },
-      { m: "crystal", r: "HT4" }
-    ]
-  },
-  {
-    name: "XomarXxX",
-    rankTitle: "Stone",
-    tiers: [
-      { m: "sword", r: "HT4" },
-      { m: "crystal", r: "HT4" },
-	  { m: "mace", r: "HT4" }
-    ]
-  },
-  {
-    name: "Dr1pzide_",
-    rankTitle: "Stone",
-    tiers: [
-      { m: "sword", r: "LT4" },
-      { m: "axe", r: "HT5" },
-      { m: "potion", r: "HT4" }
-    ]
-  },
-	  {
-    name: "Evilcurious",
-    rankTitle: "Stone",
-    tiers: [
-      { m: "sword", r: "HT5" },
-      { m: "axe", r: "LT3" },
-      { m: "potion", r: "HT4" },
-	  { m: "nethpot", r: "HT4" },
-	  { m: "mace", r: "HT4" },
-    ]
-  },
-
-  {
-    name: "BladeOP_",
-    rankTitle: "Wood",
-    tiers: [
-      { m: "sword", r: "HT5" },
-      { m: "axe", r: "HT5" },
-      { m: "crystal", r: "LT4" }
-    ]
-  },
-
-  {
-    name: "Architecture915",
-    rankTitle: "Wood",
-    tiers: [
-      { m: "sword", r: "LT4" },
-      { m: "nethpot", r: "HT5" },
-      { m: "crystal", r: "LT5" },
-	  { m: "mace", r: "HT5" }	
-    ]
-  },
-  {
-    name: "JeslyWasTaken",
-    rankTitle: "Wood",
-    tiers: [
-      { m: "sword", r: "LT3" }
-    ]
-  },
-  {
-    name: "Devil_Terror",
-    rankTitle: "Wood",
-    tiers: [
-      { m: "sword", r: "LT4" }
-    ]
-  },
-  {
-    name: "Alivegeta",
-    rankTitle: "Wood",
-    tiers: [
-      { m: "sword", r: "LT4" }
-    ]
-  },
-  {
-    name: "Venox_nx",
-    rankTitle: "Wood",
-    tiers: [
-      { m: "sword", r: "LT4" },
-      { m: "diasmp", r: "HT5"}
-    ]
-  },
-  {
-    name: "AURAXSLAYER",
-    rankTitle: "Wood",
-    tiers: [
-      { m: "axe", r: "HT5" },
-      { m: "smp", r: "HT5" }
-    ]
-  },
-  {
-    name: "Zylo_Here",
-    rankTitle: "Wood",
-    tiers: [
-      { m: "crystal", r: "HT5" },
-      { m: "nethpot", r: "LT5" }
-    ]
-  },
-
-  {
-    name: "Ryancams",
-    rankTitle: "Wood",
-    tiers: [
-      { m: "axe", r: "HT5" }
-    ]
-  },
-
-  {
-    name: "zen_ti",
-    rankTitle: "Wood",
-    tiers: [
-      { m: "crystal", r: "HT4" }
-    ]
-  },
-
-  {
-    name: "LondonBrandon",
-    rankTitle: "Wood",
-    tiers: [
-      { m: "sword", r: "LT5" },
-      { m: "crystal", r: "LT5" },
-      { m: "nethpot", r: "LT5" },
-      { m: "potion", r: "LT5" }
-    ]
-  },
-
-  {
-    name: "DeathK4ge",
-    rankTitle: "Wood",
-    tiers: [
-      { m: "sword", r: "LT4" },
-      { m: "nethpot", r: "HT5" }
-    ]
-  },
-  {
-    name: "RenderOG",
-    rankTitle: "Iron",
-    tiers: [
-      { m: "sword", r: "HT4" },
-      { m: "nethpot", r: "LT3" },
-      { m: "crystal", r: "LT3" },
-	  { m: "axe", r: "LT3" },
-	  { m: "mace", r: "HT4" },
-	  { m: "diapot", r: "HT4" }
-    ]
-  },
-  {
-    name: "FOREVERPLAY",
-    rankTitle: "Wood",
-    tiers: [
-      { m: "sword", r: "LT5" },
-      { m: "nethpot", r: "LT5" },
-      { m: "crystal", r: "LT5" }
-    ]
-  },
-
-  {
-    name: "Talal_xD",
-    rankTitle: "Wood",
-    tiers: [
-      { m: "sword", r: "HT5" },
-      { m: "axe", r: "LT5" },
-      { m: "crystal", r: "LT5" },
-      { m: "nethpot", r: "HT5" }
-    ]
-  },
-
-  {
-    name: "Java5ed",
-    rankTitle: "Wood",
-    tiers: [
-      { m: "mace", r: "HT4" },
-      { m: "crystal", r: "LT5" },
-      { m: "sword", r: "HT4" }
-    ]
-  },
-  {
-    name: "AbuHurrera",
-    rankTitle: "Wood",
-    tiers: [
-      { m: "crystal", r: "LT4" },
-      { m: "sword", r: "LT3" }
-    ]
-  },
-  {
-    name: "Demonify___",
-    rankTitle: "Wood",
-    tiers: [
-      { m: "sword", r: "LT4" },
-	  { m: "mace", r: "HT5" }
-    ]
-  },
-  {
-    name: "vHexoraid",
-    rankTitle: "Wood",
-    tiers: [
-      { m: "sword", r: "HT4" }
-    ]
-  },
-{
-    name: "NexusLegendOP_",
-    rankTitle: "Wood",
-    tiers: [
-      { m: "nethpot", r: "HT3" }
-    ]
-  },
-  {
-    name: "NotVishxD",
-    rankTitle: "Wood",
-    tiers: [
-      { m: "sword", r: "LT4" }
-    ]
-  },
-  {
-    name: "NepalLastHope",
-    rankTitle: "Wood",
-    tiers: [
-      { m: "sword", r: "LT3" }
-    ]
-  },
-  {
-    name: "aadipropvp",
-    rankTitle: "Wood",
-    tiers: [
-      { m: "mace", r: "LT4" },
-      { m: "crystal", r: "HT5" }
-    ]
-  },
-  {
-    name: "Cosmible_",
-    rankTitle: "Wood",
-    tiers: [
-      { m: "sword", r: "HT4" }
-    ]
-  },
-  {
-    name: "Aimbot_Sensie",
-    rankTitle: "Wood",
-    tiers: [
-      { m: "nethpot", r: "HT5" }
-    ]
-  },
-		{
-  name: "Venomousrapt",
-  rankTitle: "Wood",
-  tiers: [
-    { m: "sword", r: "LT4" },
-    { m: "diasmp", r: "HT5" }
-  ]
-},
-{
-  name: "RexxerX",
-  rankTitle: "Wood",
-  tiers: [
-    { m: "sword", r: "LT3" }
-  ]
-},
-{
-  name: "TheHappiestBird",
-  rankTitle: "Wood",
-  tiers: [
-    { m: "sword", r: "LT3" }
-  ]
-}
-];
-
+    
     function showMemberStats() {  
         const modalBody = document.getElementById('modal-body');  
         modalBody.innerHTML = `  
@@ -1281,7 +874,7 @@ const mcItems = {
             list.appendChild(card);
         });  
     }
-    render('all');
+    loadLeaderboardFromFirebase();
 function searchPlayers() {
     const term = document.getElementById("playerSearch").value.toLowerCase();
     const box = document.getElementById("searchBox");
@@ -1314,6 +907,33 @@ div.innerHTML = `
 
             box.appendChild(div);
         });
+}
+async function loadLeaderboardFromFirebase() {
+    const snap = await getDocs(collection(db, "submissions"));
+
+    const playersMap = {};
+
+    snap.forEach(doc => {
+        const data = doc.data();
+        const name = data.ign;
+
+        if (!playersMap[name]) {
+            playersMap[name] = {
+                name: name,
+                rankTitle: data.rank,
+                tiers: []
+            };
+        }
+
+        playersMap[name].tiers.push({
+            m: data.mode,
+            r: data.tier
+        });
+    });
+
+    players = Object.values(playersMap);
+
+    render("all");
 }
 </script>  
 </body>  
