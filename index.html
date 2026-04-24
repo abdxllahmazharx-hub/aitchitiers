@@ -765,7 +765,17 @@ style="width:100%;padding:10px;border-radius:8px;border:none;background:#16161e;
     };
 </script>
 
-<script>  
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+const firebaseConfig = {
+    apiKey: "AIzaSyDRJ9-AY5oy-oZ8ni5mWEYm2KWn72w1n3s",
+    authDomain: "aitchison-tier-testing.firebaseapp.com",
+    projectId: "aitchison-tier-testing"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app); 
 const mcItems = {
     sword: "swordd.png",
     axe: "axe.png",
@@ -874,7 +884,7 @@ const mcItems = {
             list.appendChild(card);
         });  
     }
-    loadLeaderboardFromFirebase();
+    window.onload = () => loadLeaderboardFromFirebase();
 function searchPlayers() {
     const term = document.getElementById("playerSearch").value.toLowerCase();
     const box = document.getElementById("searchBox");
